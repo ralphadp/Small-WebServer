@@ -1,0 +1,30 @@
+{
+  "entries": [
+    {
+      "tenderLocation": {
+        "key": "%s",
+        "storeNumber": "%d"
+      },
+      "sellingSystem": {
+        "operator": {
+          "operatorId": "%d",
+          "name": "%s",
+          "operatorType": "%s",
+          "hireDate": "%s"
+        },
+        "key": "%s",
+        "transactionId": "%s",
+        "terminalId": "%d"
+      },
+      "defaultEventSummary": {
+        "endDateTime": "%s",
+        "trainingMode": "%d",
+        "offLineIndicator": "%d"
+      },
+      "session": {
+        "sessionId": "%l",
+        "createdDateTime": "%s"
+      }
+    }
+  ]
+}

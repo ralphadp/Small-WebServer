@@ -1,0 +1,63 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build WebServer(in container)",
+            "type": "shell",
+            "command": "docker run --privileged -v /$(pwd)/httpServer://usr/src/httpServer cwebserver make",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": {
+                "owner": "cpp",
+                "fileLocation": [
+                    "relative",
+                    "${workspaceFolder}"
+                ],
+                "pattern": {
+                    "regexp": "^(.*):(\\d+):(\\d+):\\s+(warning|error):\\s+(.*)$",
+                    "file": 1,
+                    "line": 2,
+                    "column": 3,
+                    "severity": 4,
+                    "message": 5
+                }
+            }
+        },
+        {
+            "label": "clean (in container)",
+            "type": "shell",
+            "command": "docker run --privileged -v /$(pwd)/httpServer://usr/src/httpServer cwebserver make clean",
+            "group": "build",
+            "problemMatcher": []
+        },
+        {
+            "label": "remove containers",
+            "type": "shell",
+            "command": "docker ps -a -q | % { docker rm $_ }",
+            "problemMatcher": []
+        },
+        {
+            "label": "Run c++ webserver",
+            "type": "shell",
+            "command": "docker run --privileged -v /$(pwd)/httpServer://usr/src/httpServer --name run_server -it cwebserver ./bin/server",
+            "group": "build",
+            "problemMatcher": []
+        },
+        {
+            "label": "Stop c++ webserver",
+            "type": "shell",
+            "command": "docker kill run_server",
+            "group": "build",
+            "problemMatcher": []
+        },
+        {
+            "label": "Prepare to debug",
+            "type": "shell",
+            "command": "docker run --privileged -v /$(pwd)/httpServer://usr/src/httpServer --name debug_server -it cwebserver",
+            "group": "build",
+            "problemMatcher": []
+        }
+    ]
+}

@@ -1,0 +1,6 @@
+httpServer/bin/
+httpServer/obj/
+httpServer/src/
+ubuntu/
+googletest/
+httpServer_test/
