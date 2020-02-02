@@ -16,30 +16,31 @@
 
 namespace Network {
 
-class Request {
+    class Request {
 
-protected:
-	char payload[500] /*TODO: change to dynamically*/;
-	char length[100];
-	char sent[500]/*TODO: change to dynamically*/;
-	char charset[200];
+    protected:
+        char payload[500] /*TODO: change to dynamically*/;
+        char length[100];
+        char sent[500]/*TODO: change to dynamically*/;
+        char charset[200];
 
-	char *lines;
-	char *postLine;
-	char *message;
-	int contentMessageLength;
+        char *lines;
+        char *postLine;
+        char *message;
+        int contentMessageLength;
+        const char* headerList;
 
-	File* pfile;
-	Configuration* pConfig;
-public:
-	Request(File* file, Configuration* config);
-	virtual ~Request();
+        File* pfile;
+        Configuration* pConfig;
+    public:
+        Request(File* file, Configuration* config);
+        virtual ~Request();
 
-	virtual void prepare(char* lines) = 0;
-	virtual void process() = 0;
-protected:
-	bool verifyMessage(char* message);
-};
+        virtual void prepare(char* lines) = 0;
+        virtual void process() = 0;
+    protected:
+        bool verifyMessage(char* message);
+    };
 
 } /* namespace network */
 
