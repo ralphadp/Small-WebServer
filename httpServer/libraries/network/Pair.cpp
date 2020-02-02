@@ -7,8 +7,8 @@
 namespace Network {
 
     Pair::Pair() {
-        key = new char[16];
-        value = new char[64];
+        key = new char[24];
+        value = new char[72];
     }
 
     Pair::~Pair() {
