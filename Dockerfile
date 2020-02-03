@@ -28,9 +28,9 @@ RUN g++ -std=c++11 -Wall -o server main.cpp \
 ./libraries/controller/ControllerPair.cpp \
 ./libraries/network/Pair.cpp \
 ./libraries/network/Configuration.cpp \
-./libraries/network/GetRequest.cpp \
+./libraries/network/Verbs/GetRequest.cpp \
+./libraries/network/Verbs/PostRequest.cpp \
 ./libraries/network/HttpRequestHandler.cpp \
-./libraries/network/PostRequest.cpp \
 ./libraries/network/Request.cpp \
 ./libraries/Directory.cpp \
 ./libraries/DisplayMessages.cpp \

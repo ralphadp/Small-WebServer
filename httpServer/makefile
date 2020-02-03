@@ -34,8 +34,8 @@ ControllerPair.o \
 Pair.o \
 Configuration.o \
 GetRequest.o \
-HttpRequestHandler.o \
 PostRequest.o \
+HttpRequestHandler.o \
 Request.o
 
 OBJ_FILES = $(addprefix $(OBJECTS_DIR)/, $(OBJS))
@@ -78,6 +78,9 @@ $(OBJECTS_DIR)/%.o: libraries/network/%.cpp
 	@echo -e $(GREEN)Compiling $<$(NC)
 	$(CXX) -c $< -o $@ $(CXXFLAGS)
 
+$(OBJECTS_DIR)/%.o: libraries/network/Verbs/%.cpp
+	@echo -e $(GREEN)Compiling $<$(NC)
+	$(CXX) -c $< -o $@ $(CXXFLAGS)
 
 #Cleaning all
 clean:

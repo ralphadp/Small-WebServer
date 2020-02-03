@@ -126,9 +126,9 @@ Network::Request* HttpRequestHandler::buildRequest(char* message) {
     char* requestType = strtok(messageCopy, " ");
 
 	if (isGet(requestType)) {
-		return new Network::GetRequest(pfile, config, controller);
+		return new Network::Verbs::GetRequest(pfile, config, controller);
 	} else if (isPost(requestType)) {
-		return new Network::PostRequest(pfile, config, controller);
+		return new Network::Verbs::PostRequest(pfile, config, controller);
 	} else if (isPut(requestType)) {
 		//return new network::PutRequest(pfile);//TODO: need to implement
 	} else if (isDelete(requestType)) {

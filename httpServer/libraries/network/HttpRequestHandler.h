@@ -24,8 +24,8 @@
 #include <grp.h>
 #include <dirent.h>
 
-#include "GetRequest.h"
-#include "PostRequest.h"
+#include "Verbs/GetRequest.h"
+#include "Verbs/PostRequest.h"
 
 #include "../controller/ControllerHandler.h"
 #include "Configuration.h"

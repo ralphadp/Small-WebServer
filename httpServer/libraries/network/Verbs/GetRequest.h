@@ -8,32 +8,38 @@
 #ifndef SRC_LIBRARIES_NETWORK_GETREQUEST_H_
 #define SRC_LIBRARIES_NETWORK_GETREQUEST_H_
 
-#include "Request.h"
-#include "Configuration.h"
-#include "../controller/ControllerHandler.h"
+#include "../Request.h"
+#include "../Configuration.h"
+#include "../../controller/ControllerHandler.h"
 
 namespace Network {
 
-class GetRequest : public Request {
-	char code[50];
-	char file[200];
-	char moved[200];
-	char mime[100];
+    namespace Verbs {
 
-	char *result;
-	char *hostname;
-	char *hostnamef;
-	char *ext;
-	char *extf;
-	char *rangetmp;
-	long range;
-public:
-	GetRequest(File* file, Configuration* config, Controller::ControllerHandler* controller);
-	virtual ~GetRequest();
+        class GetRequest : public Request {
+            char code[50];
+            char file[200];
+            char moved[200];
+            char mime[100];
 
-	void prepare(char* message);
-	void process();
-};
+            char *result;
+            char *hostname;
+            char *hostnamef;
+            char *ext;
+            char *extf;
+            char *rangetmp;
+            long range;
+        public:
+            GetRequest(File *file, Configuration *config, Controller::ControllerHandler *controller);
+
+            virtual ~GetRequest();
+
+            void prepare(char *message);
+
+            void process();
+        };
+
+    } /* namespace Verbs */
 
 } /* namespace network */
 
