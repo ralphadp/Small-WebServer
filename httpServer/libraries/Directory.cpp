@@ -26,7 +26,6 @@ bool Directory::exists() {
 	DIR* dir = opendir(m_dir);
 
 	if (dir == NULL) {
-		Logger::getInstance()->warning("The %s is missing or is a file.", m_dir);
 
 		return false;
 	}
