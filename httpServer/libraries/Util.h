@@ -1,0 +1,18 @@
+//
+// Created by root on 03-02-20.
+//
+
+#ifndef SERVER_UTIL_H
+#define SERVER_UTIL_H
+
+#include <stdlib.h>
+#include <time.h>
+
+class Util {
+public:
+    static const char* boolToStr(bool value);
+    static void generateToken(char *token, unsigned int length);
+};
+
+
+#endif //SERVER_UTIL_H
