@@ -11,6 +11,7 @@
 #include "../Request.h"
 #include "../Configuration.h"
 #include "../../controller/ControllerHandler.h"
+#include "../Map.h"
 
 namespace Network {
 
@@ -29,6 +30,7 @@ namespace Network {
             char *extf;
             char *rangetmp;
             long range;
+            Map m_query;
         public:
             GetRequest(File *file, Configuration *config, Controller::ControllerHandler *controller);
 
@@ -37,6 +39,8 @@ namespace Network {
             void prepare(char *message);
 
             void process();
+
+            bool parseQuery(const char* path);
         };
 
     } /* namespace Verbs */

@@ -35,6 +35,41 @@ namespace Network {
             delete[] postLine;
         }
 
+        bool GetRequest::parseQuery(const char* path) {
+            char* query = strchr(const_cast<char*>(path), '?');
+
+            if (strlen(query) <= 1) {
+                return false;
+            }
+
+            query++;
+
+            char QUERY[1024];
+            strcpy(QUERY, query);
+
+            char* pParameter = strtok(QUERY, "&");
+            while(pParameter) {
+
+                char PARAM[512];
+                strcpy(PARAM, pParameter);
+                char* token = strtok(PARAM, "=");
+                while(token) {
+                    Pair* pair = new Pair();
+                    pair->setKey(token);
+
+                    token = strtok(NULL, "=");
+                    if (token) {
+                        pair->setValue(token);
+                        m_query = pair;
+                    }
+                }
+
+                pParameter = strtok(NULL, "&");
+            }
+
+            return true;
+        }
+
         void GetRequest::prepare(char *message) {
 
             if (!message) {
@@ -64,6 +99,11 @@ namespace Network {
             if (strcmp(code, "206 Partial Content") == 0) {
                 rangetmp = strtok(strpbrk(rangetmp, "="), "=-");
                 range = atoi(rangetmp);
+            }
+
+            if (hasQuery(result)) {
+                parseQuery(result);
+                depreciateQuery(result);
             }
 
             strcpy(file, result);
@@ -187,6 +227,8 @@ namespace Network {
             strcat(sent, "; charset=");
             strcat(sent, (*pConfig)["CHARSET"]);
             strcat(sent, "\n\n");
+
+            Logger::getInstance()->info("RESPONSE:\n%s", sent);
 
             pfile->write(sent);
 

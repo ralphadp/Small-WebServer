@@ -39,6 +39,8 @@ namespace Network {
         virtual void prepare(char* lines) = 0;
         virtual void process() = 0;
 
+        bool hasQuery(const char* path);
+        char* depreciateQuery(char* path);
     };
 
 } /* namespace network */

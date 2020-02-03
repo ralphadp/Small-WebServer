@@ -184,6 +184,10 @@ namespace Network {
 
                 if (parsePath(postLine)) {
 
+                    if (hasQuery(m_urlPath)) {
+                        depreciateQuery(m_urlPath);
+                    }
+
                 } else if (parseHeader(postLine)) {
 
                 } else if (parseContent(postLine)) {

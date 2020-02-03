@@ -30,4 +30,22 @@ namespace Network {
         delete [] m_message;
     }
 
+    /**
+     * Does the url has a query part
+     * @param path
+     * @return
+     */
+    bool Request::hasQuery(const char* path) {
+        return strchr(const_cast<char*>(path), '?') != NULL;
+    }
+
+    /**
+     * Removes the query from path
+     * @param path
+     * @return
+     */
+    char* Request::depreciateQuery(char* path) {
+        return strtok(path, "?");
+    }
+
 } /* namespace network */
