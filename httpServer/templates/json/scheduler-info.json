@@ -1,0 +1,19 @@
+{
+    "scheduler_id": "%d",
+    "user_id": "%d",
+    "reserved": {
+        "id": "%d",
+        "date": "%s",
+        "start-time": "%s",
+        "end-time": "%s",
+        "assigned": {
+            "id": "%d",
+            "name": "%s",
+            "mobile": "%s"
+        },
+        "address": "%s",
+        "phone": "%s",
+        "level": "%d",
+        "message": "%s"
+    }
+}

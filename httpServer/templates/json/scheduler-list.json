@@ -1,0 +1,10 @@
+{
+  "user_id": "%d",
+  "schedulers": [
+    {
+      "scheduler_id": "%d",
+      "level": "%d",
+      "datetime": "%s"
+    }
+  ]
+}
