@@ -13,6 +13,7 @@
 #include <string.h>
 #include <dirent.h> /*directory entity*/
 #include <unistd.h>
+#include <errno.h>
 
 #include "../libraries/Logger.h"
 #include "../libraries/FileAction.h"
@@ -57,7 +58,8 @@ public:
     unsigned int write(char* input_data);
     unsigned int writeBuffer();
 	unsigned int read_chunk();
-	bool read(char* output_data);
+    unsigned int read(unsigned int size);
+	bool read(char* output_data, unsigned int size_data);
 	void readWriteChunck();
 	unsigned int readContents(char* output_data);
 	char* getBuffer();

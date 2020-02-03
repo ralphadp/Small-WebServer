@@ -9,6 +9,7 @@
 #include "libraries/filesHandler.h"
 #include "libraries/network/Configuration.h"
 #include "libraries/network/HttpRequestHandler.h"
+#include "libraries/controller/ControllerHandler.h"
 #include "libraries/DisplayMessages.h"
 #include "libraries/Logger.h"
 
@@ -16,12 +17,15 @@ int main(int argc, char const *argv[]) {
 
 	Network::Configuration config;
 	FilesHandler filesHandler;
-	Network::HttpRequestHandler http(&config, &filesHandler);
+    Controller::ControllerHandler controller;
+	Network::HttpRequestHandler http(&config, &filesHandler, &controller);
 
 	if (!config.read()) {
 		Logger::getInstance()->error("Something is wrong with configuration's options.");
 		exit(0);
 	}
+
+	controller.load();
 
 	http.create();
 	http.bind();

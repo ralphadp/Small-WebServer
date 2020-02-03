@@ -13,6 +13,7 @@
 #include "../file.h"
 #include "../Logger.h"
 #include "Configuration.h"
+#include "../controller/ControllerHandler.h"
 
 namespace Network {
 
@@ -22,24 +23,23 @@ namespace Network {
         char payload[500] /*TODO: change to dynamically*/;
         char length[100];
         char sent[500]/*TODO: change to dynamically*/;
-        char charset[200];
 
         char *lines;
         char *postLine;
-        char *message;
-        int contentMessageLength;
+        char *m_message;
+        unsigned int contentMessageLength;
         const char* headerList;
 
         File* pfile;
         Configuration* pConfig;
+        Controller::ControllerHandler* pController;
     public:
-        Request(File* file, Configuration* config);
+        Request(File* file, Configuration* config, Controller::ControllerHandler* controller);
         virtual ~Request();
 
         virtual void prepare(char* lines) = 0;
         virtual void process() = 0;
-    protected:
-        bool verifyMessage(char* message);
+
     };
 
 } /* namespace network */

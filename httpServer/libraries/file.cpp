@@ -69,7 +69,10 @@ FILE* File::open(const char* completeFilename, FileAction type) {
     m_file_reference = fopen(completeFilename, type.get());
 
     if (m_file_reference == NULL) {
-        Logger::getInstance()->error("Filename '%s' cannot be opened", completeFilename);
+        Logger::getInstance()->error("Filename '%s' cannot be opened. %s", completeFilename, strerror(errno));
+        char cwd[PATH_MAX];
+        getcwd(cwd, sizeof(cwd));
+        Logger::getInstance()->warning("Current path %s", cwd);
 
         return NULL;
     }
@@ -187,13 +190,29 @@ unsigned int File::read_chunk() {
 	return countRead;
 }
 
-bool File::read(char* output_data) {
+unsigned int File::read(unsigned int size) {
+    if (!m_file_reference) {
+
+        return 0;
+    }
+
+    this->buffer = new char[size];
+
+    unsigned int countRead = fread (this->buffer, sizeof(char), size, m_file_reference);
+
+    this->buffer[countRead] = '\0';
+    readBytesCount = countRead;
+
+    return countRead;
+}
+
+bool File::read(char* output_data, unsigned int size_data) {
 	if (!m_file_descriptor_reference) {
 
-		return 0;
+		return false;
 	}
 
-	readBytesCount = ::read(m_file_descriptor_reference, output_data, 3000);
+	readBytesCount = ::read(m_file_descriptor_reference, output_data, size_data);
 
 	return readBytesCount != -1;
 }

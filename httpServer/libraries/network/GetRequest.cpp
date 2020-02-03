@@ -9,16 +9,20 @@
 
 namespace Network {
 
-GetRequest::GetRequest(File* file, Configuration* config) : Request(file, config) {
+GetRequest::GetRequest(
+        File* file,
+        Configuration* config,
+        Controller::ControllerHandler* controller
+    ) : Request(file, config, controller) {
 	result = NULL;
 	hostname = NULL;
 	hostnamef = NULL;
 	ext = NULL;
 	extf = NULL;
 	postLine = NULL;
-	message = NULL;
+
 	lines = NULL;
-	contentMessageLength = 0;
+
 	rangetmp = NULL;
 	range = 0;
     strcpy(code, "");
@@ -27,7 +31,6 @@ GetRequest::GetRequest(File* file, Configuration* config) : Request(file, config
 GetRequest::~GetRequest() {
 	delete [] lines;
 	delete [] postLine;
-	delete [] message;
 }
 
 void GetRequest::prepare(char* message) {

@@ -9,10 +9,15 @@
 
 namespace Network {
 
-HttpRequestHandler::HttpRequestHandler(Configuration* config, FilesHandler* fileHandler) {
+HttpRequestHandler::HttpRequestHandler(
+        Configuration* config,
+        FilesHandler* fileHandler,
+        Controller::ControllerHandler* controller
+    ) {
 
 	this->config = config;
 	this->fileHandler = fileHandler;
+	this->controller = controller;
 	pfile = new File(NULL);
 	request = NULL;
 
@@ -121,9 +126,9 @@ Network::Request* HttpRequestHandler::buildRequest(char* message) {
     char* requestType = strtok(messageCopy, " ");
 
 	if (isGet(requestType)) {
-		return new Network::GetRequest(pfile, config);
+		return new Network::GetRequest(pfile, config, controller);
 	} else if (isPost(requestType)) {
-		return new Network::PostRequest(pfile, config);
+		return new Network::PostRequest(pfile, config, controller);
 	} else if (isPut(requestType)) {
 		//return new network::PutRequest(pfile);//TODO: need to implement
 	} else if (isDelete(requestType)) {
@@ -136,7 +141,7 @@ Network::Request* HttpRequestHandler::buildRequest(char* message) {
 
     Logger::getInstance()->error("Unknown request: %s", requestType);
 
-	return NULL; //TODO:change to a generic request handler
+	return NULL; //TODO: change to a generic request handler
 }
 
 void HttpRequestHandler::clean() {
@@ -161,7 +166,7 @@ void HttpRequestHandler::listen() {
 			/*child process*/
 			close(sockfd); //close the sockfd Copy
 
-			if (!pfile->read(message)) {
+			if (!pfile->read(message, 3000)) {
 				Logger::getInstance()->error("receive error");
 			} else {
 				request = buildRequest(message);

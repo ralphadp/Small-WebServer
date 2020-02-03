@@ -1,0 +1,17 @@
+{
+  "controllers": [
+      {
+        "path": "/login",
+        "processor": "Login::verify"
+      },
+      {
+        "path": "/schedule",
+        "processor": "Scheduler::getList"
+      },
+      {
+        "path": "/schedule/<datetime>",
+        "processor": "Scheduler::getInfo"
+      }
+  ],
+  "version": "1.0.0"
+}

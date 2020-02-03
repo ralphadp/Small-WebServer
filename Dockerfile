@@ -17,6 +17,15 @@ WORKDIR /usr/src/httpServer
 
 # This command compiles your app using GCC, adjust for your source code
 RUN g++ -std=c++11 -Wall -o server main.cpp \
+./libraries/model/Model.cpp \
+./libraries/model/ModelHandler.cpp \
+./libraries/model/Result.cpp \
+./libraries/model/item/Config.cpp \
+./libraries/model/item/Scheduler.cpp \
+./libraries/model/item/Server.cpp \
+./libraries/model/item/User.cpp \
+./libraries/controller/ControllerHandler.cpp \
+./libraries/controller/ControllerPair.cpp \
 ./libraries/network/Pair.cpp \
 ./libraries/network/Configuration.cpp \
 ./libraries/network/GetRequest.cpp \

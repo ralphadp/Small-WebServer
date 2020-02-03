@@ -21,6 +21,15 @@ FileAction.o \
 file.o \
 DisplayMessages.o \
 Directory.o \
+Model.o \
+ModelHandler.o \
+Result.o \
+Config.o \
+Scheduler.o \
+Server.o \
+User.o \
+ControllerHandler.o \
+ControllerPair.o \
 Pair.o \
 Configuration.o \
 GetRequest.o \
@@ -49,6 +58,18 @@ $(OBJECTS_DIR)/%.o: %.cpp
 	$(CXX) -c $< -o $@ $(CXXFLAGS)
 
 $(OBJECTS_DIR)/%.o: libraries/%.cpp
+	@echo -e $(GREEN)Compiling $<$(NC)
+	$(CXX) -c $< -o $@ $(CXXFLAGS)
+
+$(OBJECTS_DIR)/%.o: libraries/model/%.cpp
+	@echo -e $(GREEN)Compiling $<$(NC)
+	$(CXX) -c $< -o $@ $(CXXFLAGS)
+
+$(OBJECTS_DIR)/%.o: libraries/model/item/%.cpp
+	@echo -e $(GREEN)Compiling $<$(NC)
+	$(CXX) -c $< -o $@ $(CXXFLAGS)
+
+$(OBJECTS_DIR)/%.o: libraries/controller/%.cpp
 	@echo -e $(GREEN)Compiling $<$(NC)
 	$(CXX) -c $< -o $@ $(CXXFLAGS)
 

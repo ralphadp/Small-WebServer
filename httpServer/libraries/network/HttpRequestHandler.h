@@ -27,6 +27,7 @@
 #include "GetRequest.h"
 #include "PostRequest.h"
 
+#include "../controller/ControllerHandler.h"
 #include "Configuration.h"
 #include "../filesHandler.h"
 #include "../file.h"
@@ -52,11 +53,12 @@ class HttpRequestHandler {
 
 	Configuration* config;
 	FilesHandler* fileHandler;
+    Controller::ControllerHandler* controller;
 	File* pfile;
 	Network::Request* request;
 
 public:
-	HttpRequestHandler(Configuration* config, FilesHandler* fileHandler);
+	HttpRequestHandler(Configuration* config, FilesHandler* fileHandler, Controller::ControllerHandler* controller);
 	virtual ~HttpRequestHandler();
 	void create();
 	void bind();

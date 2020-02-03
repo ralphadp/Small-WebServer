@@ -9,11 +9,15 @@
 
 namespace Network {
 
-    PostRequest::PostRequest(File* file, Configuration* config) : Request(file, config)  {
+    PostRequest::PostRequest(
+            File* file,
+            Configuration* config,
+            Controller::ControllerHandler* controller
+    ) : Request(file, config, controller)  {
+
         lines = NULL;
         postLine = NULL;
-        message = NULL;
-        contentMessageLength = 0;
+
         headers = new Pair*[MAX];
         headerIndex = 0;
         strcpy(bufferContent, "");
@@ -22,7 +26,6 @@ namespace Network {
     PostRequest::~PostRequest() {
         delete [] lines;
         delete [] postLine;
-        delete [] message;
 
         for(unsigned int index = 0; index < MAX; index++) {
             delete headers[index];
@@ -30,7 +33,7 @@ namespace Network {
         delete [] headers;
     }
 
-    bool PostRequest::getPath(const char* line) {
+    bool PostRequest::parsePath(const char* line) {
 
         if (!line) {
             return false;
@@ -42,10 +45,10 @@ namespace Network {
         char* pToken = strtok(headerLine, " ");
         if (strcmp(pToken, "POST") == 0) {
             pToken = strtok(NULL, " ");
-            strcpy(urlPath, pToken);
+            strcpy(m_urlPath, pToken);
 
             pToken = strtok(NULL, " ");
-            strcpy(version, pToken);
+            strcpy(m_version, pToken);
 
             return true;
         }
@@ -53,7 +56,7 @@ namespace Network {
         return false;
     }
 
-    bool PostRequest::getHeader(const char* line) {
+    bool PostRequest::parseHeader(const char* line) {
 
         if (!line) {
             return false;
@@ -99,8 +102,13 @@ namespace Network {
         return NULL;
     }
 
+    void PostRequest::setContents(const char* content) {
+        m_message = new char[contentMessageLength + 1];
+        strncpy(m_message, content, contentMessageLength);
+        m_message[contentMessageLength] = '\0';
+    }
 
-    bool PostRequest::getContent(const char* line) {
+    bool PostRequest::parseContent(const char* line) {
 
         if (!line) {
             return false;
@@ -109,7 +117,7 @@ namespace Network {
         char content[strlen(line)];
         strcpy(content, line);
 
-        if (this->message) {
+        if (this->m_message) {
             //The message was already read
             return false;
         }
@@ -122,9 +130,7 @@ namespace Network {
         if (strcmp(contentType, "application/json") == 0
         || strcmp(contentType, "application/x-www-form-urlencoded") == 0) {
 
-            this->message = new char[contentMessageLength + 1];
-            strncpy(this->message, content, contentMessageLength);
-            this->message[contentMessageLength] = '\0';
+            this->setContents(content);
 
             return true;
         } else if (strcmp(contentType, "multipart/form-data") == 0) {
@@ -140,9 +146,7 @@ namespace Network {
             }
 
             if (strlen(bufferContent) >= contentMessageLength) {
-                this->message = new char[contentMessageLength + 1];
-                strncpy(this->message, bufferContent, contentMessageLength);
-                this->message[contentMessageLength] = '\0';
+                this->setContents(bufferContent);
             }
 
             return true;
@@ -168,34 +172,23 @@ namespace Network {
         while (postLine) {
             //Logger::getInstance()->info("[%d] %s\n\r", (int)strlen(postLine), postLine);
 
-            if (getPath(postLine)) {
+            if (parsePath(postLine)) {
 
-            } else if (getHeader(postLine)) {
+            } else if (parseHeader(postLine)) {
 
-            } else if (getContent(postLine)) {
+            } else if (parseContent(postLine)) {
 
             }
 
             postLine = strtok(postLine + strlen (postLine) + 1, "\n\r");
-        };
+        }
     }
 
     void PostRequest::process() {
 
-        const char* response = verifyMessage(this->message)?"true":"false";
+        Model::Result result = pController->deliver(m_urlPath, m_message);
 
-        //Note.- The header and the payload are sent separately
-        sprintf(payload,
-                "{\n"
-                "\"key\":\"%s\"\n"
-                "\"result\":\"%s\"\n"
-                "}"
-                , "ki90kid-w3eqwq"
-                , response);
-
-        sprintf(length, "%ld", (long)strlen(payload));
-
-        Logger::getInstance()->info("payload:%s", this->message);
+        sprintf(length, "%ld", (long)result.getLength());
 
         //create response header
         strcpy(sent, "HTTP/1.1 200 OK");
@@ -211,8 +204,9 @@ namespace Network {
         pfile->write(sent);
 
         //create response payload
-        strcpy(sent, payload);
-        Logger::getInstance()->info("%s", sent);
+        strcpy(sent, result.getPayload());
+        //Note.- The header and the payload are sent separately
+        Logger::getInstance()->info("Deliver payload: %s", sent);
 
         pfile->write(sent);
 

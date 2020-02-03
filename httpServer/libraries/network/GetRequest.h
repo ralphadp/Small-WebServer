@@ -10,6 +10,7 @@
 
 #include "Request.h"
 #include "Configuration.h"
+#include "../controller/ControllerHandler.h"
 
 namespace Network {
 
@@ -27,7 +28,7 @@ class GetRequest : public Request {
 	char *rangetmp;
 	long range;
 public:
-	GetRequest(File* file, Configuration* config);
+	GetRequest(File* file, Configuration* config, Controller::ControllerHandler* controller);
 	virtual ~GetRequest();
 
 	void prepare(char* message);

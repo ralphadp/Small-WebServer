@@ -10,19 +10,20 @@
 
 #include "Request.h"
 #include "Configuration.h"
+#include "../controller/ControllerHandler.h"
 #include "Pair.h"
 
 namespace Network {
 
     class PostRequest : public Request {
-        char urlPath[256];
-        char version[16];
+        char m_urlPath[256];
+        char m_version[16];
         const unsigned int MAX = 12;
         Pair** headers;
         unsigned int headerIndex;
         char bufferContent[1000];
     public:
-        PostRequest(File* file, Configuration* config);
+        PostRequest(File* file, Configuration* config, Controller::ControllerHandler* controller);
         virtual ~PostRequest();
 
         void prepare(char* lines);
@@ -30,9 +31,11 @@ namespace Network {
 
         const char* operator[](const char* indexKey);
 
-        bool getPath(const char* line);
-        bool getHeader(const char* line);
-        bool getContent(const char* line);
+    private:
+        void setContents(const char* content);
+        bool parsePath(const char* line);
+        bool parseHeader(const char* line);
+        bool parseContent(const char* line);
     };
 
 } /* namespace network */
