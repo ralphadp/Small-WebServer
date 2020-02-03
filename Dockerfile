@@ -40,7 +40,8 @@ RUN g++ -std=c++11 -Wall -o server main.cpp \
 ./libraries/Filename.cpp \
 ./libraries/filesHandler.cpp \
 ./libraries/InternalDirectory.cpp \
-./libraries/Logger.cpp
+./libraries/Logger.cpp \
+./libraries/Util.cpp
 
 # Open port to access the http service
 EXPOSE 12222

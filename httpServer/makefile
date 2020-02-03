@@ -12,6 +12,7 @@ TARGET = server
 
 
 OBJS = main.o \
+Util.o \
 Logger.o \
 InternalDirectory.o \
 filesHandler.o \
