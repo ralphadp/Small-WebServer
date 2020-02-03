@@ -20,7 +20,6 @@ namespace Network {
     class Request {
 
     protected:
-        char payload[500] /*TODO: change to dynamically*/;
         char length[100];
         char sent[500]/*TODO: change to dynamically*/;
 
