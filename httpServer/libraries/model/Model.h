@@ -12,7 +12,10 @@ namespace Model {
             static const char *defaultErrorTemplate;
             static const char *defaultInvalidTemplate;
 
-            static bool verifyToken();
+        public:
+            static bool verifyToken(const char* parameters);
+            static const char* getErrorTemplate();
+            static const char* getInvalidTokenTemplate();
     };
 
 }

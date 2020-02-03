@@ -30,6 +30,16 @@ namespace Model {
 
     Result ModelHandler::process(const char *parameters) {
 
-        return this->m_pAction(parameters, fetchTemplate());
+        const char* templateContent = fetchTemplate();
+
+        if (templateContent) {
+            if (Model::verifyToken(parameters)) {
+                return this->m_pAction(parameters, templateContent);
+            }
+
+            return Result(Model::getErrorTemplate());
+        }
+
+        return Result(Model::getErrorTemplate());
     }
 }

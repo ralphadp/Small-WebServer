@@ -15,11 +15,7 @@ namespace Model {
 
         class Server : Model {
 
-            static bool verifyToken();
-
         public:
-            explicit Server();
-            virtual ~Server();
 
             static Result notFound(const char *params, const char *templateContent);
         };

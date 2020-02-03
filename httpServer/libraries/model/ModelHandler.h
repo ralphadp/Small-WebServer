@@ -10,6 +10,7 @@
 #include "../Directory.h"
 #include "../file.h"
 #include "Result.h"
+#include "Model.h"
 
 namespace Model {
 

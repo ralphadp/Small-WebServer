@@ -9,33 +9,15 @@ namespace Model {
 
     namespace Item {
 
-        Config::Config() {
-
-        }
-
-        Config::~Config() {
-
-        }
-
         Result Config::init(const char *params, const char* templateContent) {
             Logger::getInstance()->info("Config::init request payload: %s", params);
 
-            char payload[512] = "";
+            char* payload = new char[strlen(templateContent) + 24];
 
-            if (Model::verifyToken()) {
-                if (templateContent) {
-                    //TODO: call Db, fake response meanwhile
-                    sprintf(payload, templateContent,
-                            "#d3d3d3", "#6a6a6a", true, true);
-                } else {
-                    strcpy(payload, defaultErrorTemplate);
-                }
-            } else {
-                strcpy(payload, defaultInvalidTemplate);
-            }
+            //TODO: call Db, fake response meanwhile
+            sprintf(payload, templateContent, "#d3d3d3", "#6a6a6a", true, true);
 
-            Result result(payload, true);
-            return result;
+            return Result (payload);
         }
     }
 }

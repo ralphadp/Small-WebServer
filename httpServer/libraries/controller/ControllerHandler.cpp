@@ -22,8 +22,9 @@ namespace Controller {
 
     Model::Result ControllerHandler::deliver(const char* path, const char* content) {
         if (!path || !content) {
-            Model::Result error("{\"success\":\"false\",\"message\":\"Server error 100\"}", false);
-            return error;
+            Logger::getInstance()->error("The path or the content is NULL, cannot be processed in the Model");
+
+            return Model::Result("{\"success\":\"false\",\"message\":\"Server error 100\"}");
         }
 
         Model::ModelHandler* model = this->operator[](path);

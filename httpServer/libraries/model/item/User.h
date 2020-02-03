@@ -6,23 +6,21 @@
 #define SERVER_USER_H
 
 #include <stdlib.h>
-#include <time.h>
 
 #include "../../Logger.h"
 #include "../Result.h"
 #include "../Model.h"
+#include "../../Util.h"
 
 namespace Model {
 
     namespace Item {
 
         class User : Model {
-
+            static const char* defaultBadCredentialsTemplate;
+            static const unsigned int MAX_TOKEN_LENGTH;
             static bool checkCredentials();
-            static void generateToken(char *token, unsigned int length);
         public:
-            explicit User();
-            virtual ~User();
 
             static Result login(const char *params, const char* templateContent);
         };

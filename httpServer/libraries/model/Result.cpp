@@ -6,14 +6,14 @@
 
 namespace Model {
 
-    Result::Result(const char* payload, bool result) {
+    Result::Result(const char* payload) {
         m_content = payload;
         m_length = strlen(m_content);
-        m_success = result;
     }
 
     Result::~Result() {
-        //nothing to do here
+        //Need to remove 'content' from static function
+        delete [] m_content;
     }
 
     unsigned int Result::getLength() {
@@ -22,13 +22,5 @@ namespace Model {
 
     const char* Result::getPayload() {
         return m_content;
-    }
-
-    const char* Result::getSuccess() {
-        return m_success ? "true" : "false";
-    }
-
-    bool Result::isSuccessful() {
-        return m_success;
     }
 }

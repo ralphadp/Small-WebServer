@@ -15,12 +15,7 @@ namespace Model {
 
         class Config : Model {
 
-            static bool verifyToken();
-
         public:
-            explicit Config();
-
-            virtual ~Config();
 
             static Result init(const char *params, const char *templateContent);
         };

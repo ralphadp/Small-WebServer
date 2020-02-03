@@ -15,10 +15,7 @@ namespace Model {
 
         class Scheduler : Model {
 
-            static bool verifyToken();
         public:
-            explicit Scheduler();
-            virtual ~Scheduler();
 
             static Result getList(const char *params, const char* templateContent);
             static Result getInfo(const char *params, const char* templateContent);
