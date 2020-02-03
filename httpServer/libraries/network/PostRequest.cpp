@@ -43,6 +43,11 @@ namespace Network {
         strcpy(headerLine, line);
 
         char* pToken = strtok(headerLine, " ");
+
+        if (!pToken) {
+            return false;
+        }
+
         if (strcmp(pToken, "POST") == 0) {
             pToken = strtok(NULL, " ");
             strcpy(m_urlPath, pToken);
@@ -66,6 +71,11 @@ namespace Network {
         strcpy(headerLine, line);
 
         char* pToken = strtok(headerLine, " ");
+
+        if (!pToken) {
+            return false;
+        }
+
         if (strstr(this->headerList, pToken)) {
 
             headers[headerIndex] = new Pair;
@@ -170,7 +180,7 @@ namespace Network {
         postLine = strtok(message, "\n\r");
 
         while (postLine) {
-            //Logger::getInstance()->info("[%d] %s\n\r", (int)strlen(postLine), postLine);
+            //Logger::getInstance()->info("[%d] %s", (int)strlen(postLine), postLine);
 
             if (parsePath(postLine)) {
 
