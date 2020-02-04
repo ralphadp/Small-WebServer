@@ -32,7 +32,7 @@ User.o \
 ControllerHandler.o \
 ControllerPair.o \
 Pair.o \
-Map.o
+Map.o \
 Configuration.o \
 GetRequest.o \
 PostRequest.o \
