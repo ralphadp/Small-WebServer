@@ -8,12 +8,18 @@
 #include <string.h>
 
 #include "../model/ModelHandler.h"
+#include "../Util.h"
 
 namespace Controller {
 
     class ControllerPair {
-        char *key;
-        Model::ModelHandler* controller;
+        char *m_key;
+        Model::ModelHandler* m_controller;
+        char** m_pathParts;
+        unsigned int MAX_URL_PARTS;
+
+        unsigned int getPathPartsLength(const char* key);
+        void storePathParts(const char* key);
 
     public:
         ControllerPair();
@@ -27,6 +33,10 @@ namespace Controller {
         void setKey(const char* key);
 
         void setValue(Model::ModelHandler* value);
+
+        char** getPathParts();
+
+        unsigned int getMaxLengthParts();
     };
 }
 

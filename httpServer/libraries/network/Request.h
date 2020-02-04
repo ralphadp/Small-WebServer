@@ -14,24 +14,32 @@
 #include "../Logger.h"
 #include "Configuration.h"
 #include "../controller/ControllerHandler.h"
+#include "Map.h"
+#include "RequestBag.h"
 
 namespace Network {
 
     class Request {
 
+        unsigned int MAX_URL_PARTS;
+        char** m_urlParts;
+
+        unsigned int getPathPartsLength(const char* url);
+        void storePathParts(const char* url);
     protected:
+        RequestBag m_bag;
         char length[100];
         char sent[500]/*TODO: change to dynamically*/;
 
         char *lines;
         char *postLine;
-        char *m_message;
-        unsigned int contentMessageLength;
         const char* headerList;
 
         File* pfile;
         Configuration* pConfig;
         Controller::ControllerHandler* pController;
+        Map m_parameters;
+
     public:
         Request(File* file, Configuration* config, Controller::ControllerHandler* controller);
         virtual ~Request();
@@ -41,6 +49,8 @@ namespace Network {
 
         bool hasQuery(const char* path);
         char* depreciateQuery(char* path);
+        void parseParameters(const char* parameters);
+        bool pickParametersFromPath(const char *urlPath);
     };
 
 } /* namespace network */

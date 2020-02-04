@@ -32,7 +32,7 @@ namespace Network {
             for (unsigned int index = 0; index < MAX; index++) {
                 delete headers[index];
             }
-            delete[] headers;
+            delete [] headers;
         }
 
         bool PostRequest::parsePath(const char *line) {
@@ -52,10 +52,10 @@ namespace Network {
 
             if (strcmp(pToken, "POST") == 0) {
                 pToken = strtok(NULL, " ");
-                strcpy(m_urlPath, pToken);
+                strcpy(m_bag.m_urlPath, pToken);
 
                 pToken = strtok(NULL, " ");
-                strcpy(m_version, pToken);
+                strcpy(m_bag.m_version, pToken);
 
                 return true;
             }
@@ -96,7 +96,7 @@ namespace Network {
 
         const char *PostRequest::operator[](const char *indexKey) {
             if (!indexKey || strlen(indexKey) == 0) {
-                Logger::getInstance()->warning("key is null");
+                Logger::getInstance()->warning("Post header key is null");
 
                 return NULL;
             }
@@ -112,12 +112,6 @@ namespace Network {
             return NULL;
         }
 
-        void PostRequest::setContents(const char *content) {
-            m_message = new char[contentMessageLength + 1];
-            strncpy(m_message, content, contentMessageLength);
-            m_message[contentMessageLength] = '\0';
-        }
-
         bool PostRequest::parseContent(const char *line) {
 
             if (!line) {
@@ -127,20 +121,20 @@ namespace Network {
             char content[strlen(line)];
             strcpy(content, line);
 
-            if (this->m_message) {
+            if (this->m_bag.m_message) {
                 //The message was already read
                 return false;
             }
 
             const char *contentType = this->operator[]("content-type:");
-            if (!contentMessageLength) {
-                contentMessageLength = atoi(this->operator[]("Content-Length:"));
+            if (!m_bag.contentMessageLength) {
+                m_bag.contentMessageLength = atoi(this->operator[]("Content-Length:"));
             }
 
             if (strcmp(contentType, "application/json") == 0
                 || strcmp(contentType, "application/x-www-form-urlencoded") == 0) {
 
-                this->setContents(content);
+                m_bag.setContents(content);
 
                 return true;
             } else if (strcmp(contentType, "multipart/form-data") == 0) {
@@ -155,8 +149,8 @@ namespace Network {
                     strcat(bufferContent, content);
                 }
 
-                if (strlen(bufferContent) >= contentMessageLength) {
-                    this->setContents(bufferContent);
+                if (strlen(bufferContent) >= m_bag.contentMessageLength) {
+                    m_bag.setContents(bufferContent);
                 }
 
                 return true;
@@ -184,9 +178,10 @@ namespace Network {
 
                 if (parsePath(postLine)) {
 
-                    if (hasQuery(m_urlPath)) {
-                        depreciateQuery(m_urlPath);
+                    if (hasQuery(m_bag.m_urlPath)) {
+                        depreciateQuery(m_bag.m_urlPath);
                     }
+                    pickParametersFromPath(m_bag.m_urlPath);
 
                 } else if (parseHeader(postLine)) {
 
@@ -200,7 +195,7 @@ namespace Network {
 
         void PostRequest::process() {
 
-            Model::Result result = pController->deliver(m_urlPath, m_message);
+            Model::Result result = pController->deliver(m_bag);
 
             sprintf(length, "%ld", (long) result.getLength());
 

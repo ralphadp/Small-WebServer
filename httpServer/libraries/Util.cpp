@@ -24,3 +24,16 @@ void Util::generateToken(char *token, unsigned int length) {
 
     token[length] = 0;
 }
+
+char* Util::clone(const char* stringValue) {
+    if (!stringValue) {
+        return NULL;
+    }
+
+    unsigned int length = strlen(stringValue);
+    char* clone = new char[length + 1];
+    strcpy(clone, stringValue);
+    clone[length] = 0;
+
+    return clone;
+}

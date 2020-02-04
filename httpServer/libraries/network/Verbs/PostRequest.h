@@ -18,8 +18,7 @@ namespace Network {
     namespace Verbs {
 
         class PostRequest : public Request {
-            char m_urlPath[256];
-            char m_version[16];
+
             const unsigned int MAX = 12;
             Pair **headers;
             unsigned int headerIndex;
@@ -36,7 +35,6 @@ namespace Network {
             const char *operator[](const char *indexKey);
 
         private:
-            void setContents(const char *content);
 
             bool parsePath(const char *line);
 

@@ -10,6 +10,7 @@ namespace Controller {
     ControllerHandler::ControllerHandler() {
         m_controllerMap = new ControllerPair*[MAX];
         m_index = 0;
+        m_pSelectedModel = NULL;
     }
 
     ControllerHandler::~ControllerHandler() {
@@ -20,20 +21,26 @@ namespace Controller {
         delete m_controllerMap;
     }
 
-    Model::Result ControllerHandler::deliver(const char* path, const char* content) {
-        if (!path || !content) {
+    Model::Result ControllerHandler::deliver(Network::RequestBag requestBag) {
+        const char* urlPath = requestBag.getUrlPath();
+        if (!urlPath || !requestBag.getContents()) {
             Logger::getInstance()->error("The path or the content is NULL, cannot be processed in the Model");
 
             return Model::Result("{\"success\":\"false\",\"message\":\"Server error 100\"}");
         }
 
-        Model::ModelHandler* model = this->operator[](path);
+        Model::ModelHandler* model = this->operator[](urlPath);
 
         if (!model) {
-            model = this->operator[]("not-found");
+
+            model = m_pSelectedModel;
+
+            if (!model) {
+                model = this->operator[]("not-found");
+            }
         }
 
-        return model->process(content);
+        return model->process(requestBag.getContents());
     }
 
     void  ControllerHandler::load() {
@@ -52,6 +59,11 @@ namespace Controller {
         add("not-found", new Model::ModelHandler(
                 Model::Item::Server::notFound, "./templates/json/not-found.json"
         ));
+        //for(int ptr = 0; ptr < 5; ptr++) {
+        //    for (int index = 0; index < m_controllerMap[ptr]->getMaxLengthParts(); index++) {
+        //        Logger::getInstance()->info("controller[%d]:%s", ptr, m_controllerMap[ptr]->getPathParts()[index]);
+        //    }
+        //}
     }
 
     void ControllerHandler::add(const char* path, Model::ModelHandler* handler) {
@@ -81,4 +93,72 @@ namespace Controller {
 
         return NULL;
     }
+
+    const char* ControllerHandler::paramsChecker(char** url, unsigned int maxParts)
+    {
+        if (!url) {
+            Logger::getInstance()->error("Url part list is empty.");
+
+            return NULL;
+        }
+
+        m_pSelectedModel = NULL;
+        ControllerPair** iterator = m_controllerMap;
+        char** part = NULL;
+
+        while(*iterator != NULL) {
+
+            if ((*iterator)->getMaxLengthParts() != maxParts) {
+                iterator++;
+                continue;
+            }
+
+            unsigned int index = 0;
+            part = (*iterator)->getPathParts();
+
+            //The first part of th Rest cannot be variable
+            if (strcmp(part[index], url[index]) == 0) {
+
+                index++;
+                bool onTrack = true;
+                char* parameters = new char[512];
+                strcpy(parameters, "");
+
+                while (index < maxParts && onTrack) {
+
+                    if (strcmp(part[index], url[index]) != 0) {
+                        onTrack = false;
+                        if (part[index][0] == ':') {
+                            //Is a variable part of the Rest
+
+                            if (!strlen(parameters)) {
+                                sprintf(parameters, "%s=%s", &part[index][1], url[index]);
+                            } else {
+                                sprintf(parameters, "%s&%s=%s", parameters, &part[index][1], url[index]);
+                            }
+
+                            onTrack = true;
+                        }
+                    } else {
+                        onTrack = true;
+                    }
+
+                    index++;
+                }
+
+                if (onTrack) {
+                    m_pSelectedModel = (*iterator)->getValue();
+                    Logger::getInstance()->info("Path variables: '%s'", parameters);
+                    return parameters;
+                }
+
+                delete [] parameters;
+            }
+
+            iterator++;
+        }
+
+        return NULL;
+    }
+
 }

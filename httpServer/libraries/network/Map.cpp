@@ -8,18 +8,18 @@ namespace Network {
 
     Map::Map() {
         m_pMmap = new Pair*[MAX_ITEMS];
-        index = 0;
+        m_index = 0;
     }
 
     Map::~Map() {
         for(unsigned int index = 0; index < MAX_ITEMS; index++) {
             delete m_pMmap[index];
         }
-        delete m_pMmap;
+        delete [] m_pMmap;
     }
 
     Map& Map::operator=(Pair* item) {
-        m_pMmap[index++] = item;
+        m_pMmap[m_index++] = item;
     }
 
     const char *Map::operator[](const char *key) {
@@ -38,5 +38,9 @@ namespace Network {
         }
 
         return "Unknown";
+    }
+
+    bool Map::getLength() {
+        return m_index;
     }
 }

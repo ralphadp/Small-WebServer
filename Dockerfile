@@ -33,6 +33,7 @@ RUN g++ -std=c++11 -Wall -o server main.cpp \
 ./libraries/network/Verbs/PostRequest.cpp \
 ./libraries/network/HttpRequestHandler.cpp \
 ./libraries/network/Request.cpp \
+./libraries/network/RequestBag.cpp \
 ./libraries/Directory.cpp \
 ./libraries/DisplayMessages.cpp \
 ./libraries/file.cpp \

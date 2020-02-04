@@ -13,13 +13,14 @@ namespace Network {
 
         const unsigned int MAX_ITEMS = 6;
         Pair **m_pMmap;
-        unsigned int index;
+        unsigned int m_index;
     public:
         Map();
         virtual ~Map();
 
         Map& operator=(Pair* item);
         const char *operator[](const char *key);
+        bool getLength();
     };
 }
 
