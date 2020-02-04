@@ -10,6 +10,7 @@
 #include "../../Logger.h"
 #include "../Result.h"
 #include "../Model.h"
+#include "../../network/RequestBag.h"
 #include "../../Util.h"
 
 namespace Model {
@@ -22,7 +23,7 @@ namespace Model {
             static bool checkCredentials();
         public:
 
-            static Result login(const char *params, const char* templateContent);
+            static Result login(Network::RequestBag params, const char* templateContent);
         };
     }
 

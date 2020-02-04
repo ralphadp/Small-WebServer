@@ -7,14 +7,18 @@
 
 #include <string.h>
 
+#include "Map.h"
+
 namespace Network {
 
     class RequestBag {
+
     public:
         char m_urlPath[256];
         char m_version[16];
         char *m_message;
         unsigned int contentMessageLength;
+        Network::Map m_restParameters;
 
         RequestBag();
         ~RequestBag();
@@ -23,8 +27,8 @@ namespace Network {
         const char* getUrlPath();
         const char* getVersion();
         void setContents(const char *content);
+        void copyRestParams(const Network::Map&  restParameters);
 
-        //friend class Request;
     };
 }
 

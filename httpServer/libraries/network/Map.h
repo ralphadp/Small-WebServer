@@ -11,14 +11,14 @@ namespace Network {
 
     class Map {
 
-        const unsigned int MAX_ITEMS = 6;
+        unsigned int MAX_ITEMS = 6;
         Pair **m_pMmap;
         unsigned int m_index;
     public:
         Map();
         virtual ~Map();
 
-        Map& operator=(Pair* item);
+        void add(Pair* item);
         const char *operator[](const char *key);
         bool getLength();
     };

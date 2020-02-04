@@ -8,6 +8,7 @@
 #include "../../Logger.h"
 #include "../Result.h"
 #include "../Model.h"
+#include "../../network/RequestBag.h"
 
 namespace Model {
 
@@ -17,7 +18,7 @@ namespace Model {
 
         public:
 
-            static Result init(const char *params, const char *templateContent);
+            static Result init(Network::RequestBag params, const char *templateContent);
         };
     }
 }

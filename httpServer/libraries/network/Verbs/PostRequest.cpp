@@ -181,7 +181,6 @@ namespace Network {
                     if (hasQuery(m_bag.m_urlPath)) {
                         depreciateQuery(m_bag.m_urlPath);
                     }
-                    pickParametersFromPath(m_bag.m_urlPath);
 
                 } else if (parseHeader(postLine)) {
 
@@ -195,7 +194,7 @@ namespace Network {
 
         void PostRequest::process() {
 
-            Model::Result result = pController->deliver(m_bag);
+            Model::Result result = pController->deliverProcessing(m_bag);
 
             sprintf(length, "%ld", (long) result.getLength());
 

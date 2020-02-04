@@ -38,7 +38,8 @@ GetRequest.o \
 PostRequest.o \
 HttpRequestHandler.o \
 Request.o \
-RequestBag.o
+RequestBag.o \
+Rest.o
 
 OBJ_FILES = $(addprefix $(OBJECTS_DIR)/, $(OBJS))
 

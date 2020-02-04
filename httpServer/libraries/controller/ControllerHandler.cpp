@@ -10,7 +10,6 @@ namespace Controller {
     ControllerHandler::ControllerHandler() {
         m_controllerMap = new ControllerPair*[MAX];
         m_index = 0;
-        m_pSelectedModel = NULL;
     }
 
     ControllerHandler::~ControllerHandler() {
@@ -21,8 +20,9 @@ namespace Controller {
         delete m_controllerMap;
     }
 
-    Model::Result ControllerHandler::deliver(Network::RequestBag requestBag) {
+    Model::Result ControllerHandler::deliverProcessing(Network::RequestBag requestBag) {
         const char* urlPath = requestBag.getUrlPath();
+
         if (!urlPath || !requestBag.getContents()) {
             Logger::getInstance()->error("The path or the content is NULL, cannot be processed in the Model");
 
@@ -33,14 +33,23 @@ namespace Controller {
 
         if (!model) {
 
-            model = m_pSelectedModel;
+            Controller::ControllerPair* controllerSelected = m_rest.process(urlPath, m_controllerMap);
 
-            if (!model) {
+            if (controllerSelected) {
+                model = controllerSelected->getValue();
+                if (model) {
+                    requestBag.copyRestParams(m_rest.getParameters());
+                } else {
+                    Logger::getInstance()->error("The Model attached to %s is empty.", urlPath);
+
+                    return Model::Result("{\"success\":\"false\",\"message\":\"Server error 102\"}");
+                }
+            } else {
                 model = this->operator[]("not-found");
             }
         }
 
-        return model->process(requestBag.getContents());
+        return model->process(requestBag);
     }
 
     void  ControllerHandler::load() {
@@ -88,73 +97,6 @@ namespace Controller {
             if ((*iterator)->hasKey(indexKey)) {
                 return (*iterator)->getValue();
             }
-            iterator++;
-        }
-
-        return NULL;
-    }
-
-    const char* ControllerHandler::paramsChecker(char** url, unsigned int maxParts)
-    {
-        if (!url) {
-            Logger::getInstance()->error("Url part list is empty.");
-
-            return NULL;
-        }
-
-        m_pSelectedModel = NULL;
-        ControllerPair** iterator = m_controllerMap;
-        char** part = NULL;
-
-        while(*iterator != NULL) {
-
-            if ((*iterator)->getMaxLengthParts() != maxParts) {
-                iterator++;
-                continue;
-            }
-
-            unsigned int index = 0;
-            part = (*iterator)->getPathParts();
-
-            //The first part of th Rest cannot be variable
-            if (strcmp(part[index], url[index]) == 0) {
-
-                index++;
-                bool onTrack = true;
-                char* parameters = new char[512];
-                strcpy(parameters, "");
-
-                while (index < maxParts && onTrack) {
-
-                    if (strcmp(part[index], url[index]) != 0) {
-                        onTrack = false;
-                        if (part[index][0] == ':') {
-                            //Is a variable part of the Rest
-
-                            if (!strlen(parameters)) {
-                                sprintf(parameters, "%s=%s", &part[index][1], url[index]);
-                            } else {
-                                sprintf(parameters, "%s&%s=%s", parameters, &part[index][1], url[index]);
-                            }
-
-                            onTrack = true;
-                        }
-                    } else {
-                        onTrack = true;
-                    }
-
-                    index++;
-                }
-
-                if (onTrack) {
-                    m_pSelectedModel = (*iterator)->getValue();
-                    Logger::getInstance()->info("Path variables: '%s'", parameters);
-                    return parameters;
-                }
-
-                delete [] parameters;
-            }
-
             iterator++;
         }
 

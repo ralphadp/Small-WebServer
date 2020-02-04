@@ -8,8 +8,8 @@ namespace Model {
 
     namespace Item {
 
-        Result Scheduler::getList(const char *params, const char* templateContent) {
-            Logger::getInstance()->info("%s request payload: %s",  __func__, params);
+        Result Scheduler::getList(Network::RequestBag params, const char* templateContent) {
+            Logger::getInstance()->info("::%s request rest params: %d", __func__, params.m_restParameters.getLength());
 
             char* payload = new char[strlen(templateContent) + 40];
 
@@ -19,8 +19,8 @@ namespace Model {
             return Result(payload);
         }
 
-        Result Scheduler::getInfo(const char *params, const char* templateContent) {
-            Logger::getInstance()->info("%s request payload: %s",  __func__, params);
+        Result Scheduler::getInfo(Network::RequestBag params, const char* templateContent) {
+            Logger::getInstance()->info("::%s request rest params: %d", __func__, params.m_restParameters.getLength());
 
             char* payload = new char[strlen(templateContent) + 256];
 

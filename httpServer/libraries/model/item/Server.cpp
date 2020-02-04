@@ -8,8 +8,8 @@ namespace Model {
 
     namespace Item {
 
-        Result Server::notFound(const char *params, const char* templateContent) {
-            Logger::getInstance()->info("%s request payload: %s", __func__, params);
+        Result Server::notFound(Network::RequestBag params, const char* templateContent) {
+            Logger::getInstance()->info("::%s request rest params: %d", __func__, params.m_restParameters.getLength());
 
             return Result(templateContent);
         }

@@ -6,7 +6,7 @@
 
 namespace Model {
 
-    ModelHandler::ModelHandler(Result (*pActionFunction)(const char*, const char*), const char *templateFilename) {
+    ModelHandler::ModelHandler(Result (*pActionFunction)(Network::RequestBag, const char*), const char *templateFilename) {
         m_pAction = pActionFunction;
         m_templateFilename = templateFilename;
         m_templateFile = new File(NULL);
@@ -28,16 +28,16 @@ namespace Model {
         return m_templateFile->getBuffer();
     }
 
-    Result ModelHandler::process(const char *parameters) {
+    Result ModelHandler::process(Network::RequestBag parameters) {
 
         const char* templateContent = fetchTemplate();
 
         if (templateContent) {
-            if (Model::verifyToken(parameters)) {
+            if (Model::verifyToken(parameters.getContents())) {
                 return this->m_pAction(parameters, templateContent);
             }
 
-            return Result(Model::getErrorTemplate());
+            return Result(Model::getInvalidTokenTemplate());
         }
 
         return Result(Model::getErrorTemplate());

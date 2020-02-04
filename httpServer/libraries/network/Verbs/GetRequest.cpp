@@ -60,7 +60,7 @@ namespace Network {
                     token = strtok(NULL, "=");
                     if (token) {
                         pair->setValue(token);
-                        m_query = pair;
+                        m_query.add(pair);
                     }
                 }
 

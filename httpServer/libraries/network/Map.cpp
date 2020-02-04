@@ -18,8 +18,10 @@ namespace Network {
         delete [] m_pMmap;
     }
 
-    Map& Map::operator=(Pair* item) {
-        m_pMmap[m_index++] = item;
+    void Map::add(Pair* item) {
+        if (m_index < MAX_ITEMS) {
+            m_pMmap[m_index++] = item;
+        }
     }
 
     const char *Map::operator[](const char *key) {

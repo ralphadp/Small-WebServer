@@ -11,6 +11,7 @@
 #include "../file.h"
 #include "Result.h"
 #include "Model.h"
+#include "../network/RequestBag.h"
 
 namespace Model {
 
@@ -18,14 +19,14 @@ namespace Model {
 
         File* m_templateFile;
         const char* m_templateFilename;
-        Result (*m_pAction)(const char*, const char*);
+        Result (*m_pAction)(Network::RequestBag, const char*);
 
         const char *fetchTemplate();
     public:
-        explicit ModelHandler(Result (*fn)(const char*, const char*), const char *templateFilename);
+        explicit ModelHandler(Result (*fn)(Network::RequestBag, const char*), const char *templateFilename);
         virtual ~ModelHandler();
 
-        Result process(const char *parameters);
+        Result process(Network::RequestBag parameters);
     };
 
 }

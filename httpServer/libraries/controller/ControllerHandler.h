@@ -17,6 +17,7 @@
 #include "../model/item/Server.h"
 
 #include "../network/RequestBag.h"
+#include "../network/Rest.h"
 
 namespace Controller {
 
@@ -26,18 +27,18 @@ namespace Controller {
 
         ControllerPair** m_controllerMap;
         unsigned int m_index;
-        Model::ModelHandler* m_pSelectedModel;
+        Network::Rest m_rest;
 
         void add(const char* path, Model::ModelHandler* handler);
     public:
         explicit ControllerHandler();
         virtual ~ControllerHandler();
 
-        Model::Result deliver(Network::RequestBag request);
+        Model::Result deliverProcessing(Network::RequestBag request);
         void load();
 
         Model::ModelHandler* operator[](const char* indexKey);
-        const char* paramsChecker(char** url, unsigned int maxParts);
+
     };
 
 }

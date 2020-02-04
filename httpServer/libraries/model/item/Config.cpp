@@ -9,8 +9,8 @@ namespace Model {
 
     namespace Item {
 
-        Result Config::init(const char *params, const char* templateContent) {
-            Logger::getInstance()->info("Config::init request payload: %s", params);
+        Result Config::init(Network::RequestBag params, const char* templateContent) {
+            Logger::getInstance()->info("::%s request rest params: %d", __func__, params.m_restParameters.getLength());
 
             char* payload = new char[strlen(templateContent) + 24];
 

@@ -32,4 +32,9 @@ namespace Network {
         strncpy(m_message, content, contentMessageLength);
         m_message[contentMessageLength] = '\0';
     }
+
+    void RequestBag::copyRestParams(const Network::Map& restParameters) {
+        m_restParameters = restParameters;
+    }
+
 }
