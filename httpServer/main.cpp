@@ -15,6 +15,8 @@
 
 int main(int argc, char const *argv[]) {
 
+	Logger::getInstance()->info("Server starting...");
+
 	Network::Configuration config;
 	FilesHandler filesHandler;
     Controller::ControllerHandler controller;

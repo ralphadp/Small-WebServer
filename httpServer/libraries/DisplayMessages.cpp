@@ -18,13 +18,14 @@ DisplayMessages::~DisplayMessages() {
 }
 
 void DisplayMessages::initialDisplay() {
-	Logger::getInstance()->info("Server started...");
+	Logger::getInstance()->info("");
 	Logger::getInstance()->info("**********************");
 	Logger::getInstance()->info("*                    *");
-	Logger::getInstance()->info("*   Version: 0.1.1   *");
+	Logger::getInstance()->info("*   Version: 0.1.4   *");
 	Logger::getInstance()->info("*   Copyright 2018   *");
 	Logger::getInstance()->info("*                    *");
 	Logger::getInstance()->info("**********************");
+	Logger::getInstance()->info("");
 }
 
 } /* namespace Libraries */
