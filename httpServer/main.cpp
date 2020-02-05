@@ -25,7 +25,7 @@ int main(int argc, char const *argv[]) {
 		exit(0);
 	}
 
-	controller.load();
+	controller.configure();
 
 	http.create();
 	http.bind();

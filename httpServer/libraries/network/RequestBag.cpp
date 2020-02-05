@@ -15,6 +15,10 @@ namespace Network {
         delete [] m_message;
     }
 
+    const char* RequestBag::getVerb() {
+        return m_verb;
+    }
+
     const char* RequestBag::getContents() {
         return m_message;
     }

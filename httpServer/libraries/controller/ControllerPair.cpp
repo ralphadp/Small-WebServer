@@ -11,6 +11,12 @@ namespace Controller {
         m_controller = NULL;
     }
 
+    ControllerPair::ControllerPair(const char* key, Model::ModelHandler* value) {
+        m_key = new char[24];
+        setKey(key);
+        setValue(value);
+    }
+
     ControllerPair::~ControllerPair() {
         delete[] m_key;
         delete m_controller;

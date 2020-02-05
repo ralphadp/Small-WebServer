@@ -8,64 +8,73 @@
 namespace Controller {
 
     ControllerHandler::ControllerHandler() {
-        m_controllerMap = new ControllerPair*[MAX];
-        m_index = 0;
+
     }
 
     ControllerHandler::~ControllerHandler() {
 
-        for(unsigned int index = 0; index < MAX; index++) {
-            delete m_controllerMap[index];
+    }
+
+    Model::ModelHandler* ControllerHandler::fetchModel(Network::RequestBag requestBag) {
+
+        const char* URL_PATH = requestBag.getUrlPath();
+
+        const ControllerMap& controller = getController(requestBag.getVerb());
+
+        Model::ModelHandler* model = controller[URL_PATH];
+
+        if (!model) {
+
+            Controller::ControllerPair* restController = m_rest.process(URL_PATH, controller.getPair());
+
+            if (restController) {
+                model = restController->getValue();
+                if (model) {
+                    requestBag.copyRestParams(m_rest.getParameters());
+                } else {
+                    Logger::getInstance()->error("The Model attached to %s is empty.", URL_PATH);
+
+                    return NULL;
+                }
+            } else {
+                model = m_post["not-found"];
+            }
         }
-        delete m_controllerMap;
+
+        return model;
     }
 
     Model::Result ControllerHandler::deliverProcessing(Network::RequestBag requestBag) {
-        const char* urlPath = requestBag.getUrlPath();
 
-        if (!urlPath || !requestBag.getContents()) {
+        if (!requestBag.getUrlPath() || !requestBag.getContents()) {
             Logger::getInstance()->error("The path or the content is NULL, cannot be processed in the Model");
 
             return Model::Result("{\"success\":\"false\",\"message\":\"Server error 100\"}");
         }
 
-        Model::ModelHandler* model = this->operator[](urlPath);
+        Model::ModelHandler* model = fetchModel(requestBag);
 
         if (!model) {
-
-            Controller::ControllerPair* controllerSelected = m_rest.process(urlPath, m_controllerMap);
-
-            if (controllerSelected) {
-                model = controllerSelected->getValue();
-                if (model) {
-                    requestBag.copyRestParams(m_rest.getParameters());
-                } else {
-                    Logger::getInstance()->error("The Model attached to %s is empty.", urlPath);
-
-                    return Model::Result("{\"success\":\"false\",\"message\":\"Server error 102\"}");
-                }
-            } else {
-                model = this->operator[]("not-found");
-            }
+            return Model::Result("{\"success\":\"false\",\"message\":\"Server error 102\"}");
         }
 
         return model->process(requestBag);
     }
 
-    void  ControllerHandler::load() {
-        add("/config", new Model::ModelHandler(
+    void  ControllerHandler::configure() {
+        addPOST("/config", new Model::ModelHandler(
                 Model::Item::Config::init, "./templates/json/init_response.json"
         ));
-        add("/login", new Model::ModelHandler(
+        addPOST("/login", new Model::ModelHandler(
                 Model::Item::User::login, "./templates/json/login_response.json"
         ));
-        add("/schedule", new Model::ModelHandler(
+        addPOST("/schedule", new Model::ModelHandler(
                 Model::Item::Scheduler::getList, "./templates/json/scheduler-list.json"
         ));
-        add("/schedule/:datetime", new Model::ModelHandler(
+        addPOST("/schedule/:datetime", new Model::ModelHandler(
                 Model::Item::Scheduler::getInfo, "./templates/json/scheduler-info.json"
         ));
-        add("not-found", new Model::ModelHandler(
+        addPOST("not-found", new Model::ModelHandler(
                 Model::Item::Server::notFound, "./templates/json/not-found.json"
         ));
         //for(int ptr = 0; ptr < 5; ptr++) {
@@ -73,34 +82,32 @@ namespace Controller {
         //        Logger::getInstance()->info("controller[%d]:%s", ptr, m_controllerMap[ptr]->getPathParts()[index]);
         //    }
         //}
+        addGET("config", new Model::ModelHandler(
+                Model::Item::Server::notFound, "./templates/json/not-found.json"
+        ));
+
     }
 
-    void ControllerHandler::add(const char* path, Model::ModelHandler* handler) {
-        m_controllerMap[m_index] = new ControllerPair;
-        m_controllerMap[m_index]->setKey(path);
-        m_controllerMap[m_index]->setValue(handler);
-
-        m_controllerMap[++m_index] = NULL;
+    void ControllerHandler::addPOST(const char* path, Model::ModelHandler* handler) {
+        m_post.add(new ControllerPair(path, handler));
     }
 
-    Model::ModelHandler* ControllerHandler::operator[](const char* indexKey)
-    {
-        if (!indexKey || strlen(indexKey) == 0)
-        {
-            Logger::getInstance()->error("key is null");
+    void ControllerHandler::addGET(const char* path, Model::ModelHandler* handler) {
+        m_get.add(new ControllerPair(path, handler));
+    }
 
-            return NULL;
+    const ControllerMap& ControllerHandler::getController(const char* verb) {
+        if (!verb) {
+            return m_unknown;
         }
 
-        ControllerPair** iterator = m_controllerMap;
-        while(*iterator != NULL) {
-            if ((*iterator)->hasKey(indexKey)) {
-                return (*iterator)->getValue();
-            }
-            iterator++;
+        if (strcmp(verb, "GET") == 0) {
+            return m_get;
+        } else if (strcmp(verb, "POST") == 0) {
+            return m_post;
         }
 
-        return NULL;
+        return m_unknown;
     }
 
 }

@@ -14,6 +14,7 @@ namespace Network {
     class RequestBag {
 
     public:
+        char m_verb[8];
         char m_urlPath[256];
         char m_version[16];
         char *m_message;
@@ -23,6 +24,7 @@ namespace Network {
         RequestBag();
         ~RequestBag();
 
+        const char* getVerb();
         const char* getContents();
         const char* getUrlPath();
         const char* getVersion();

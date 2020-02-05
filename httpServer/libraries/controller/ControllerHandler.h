@@ -18,26 +18,29 @@
 
 #include "../network/RequestBag.h"
 #include "../network/Rest.h"
+#include "ControllerMap.h"
 
 namespace Controller {
 
     class ControllerHandler {
 
-        const unsigned int MAX = 6;
+        ControllerMap m_post;
+        ControllerMap m_get;
+        ControllerMap m_unknown;
 
-        ControllerPair** m_controllerMap;
-        unsigned int m_index;
         Network::Rest m_rest;
-
-        void add(const char* path, Model::ModelHandler* handler);
+    protected:
+        void addPOST(const char* path, Model::ModelHandler* handler);
+        void addGET(const char* path, Model::ModelHandler* handler);
+        Model::ModelHandler* fetchModel(Network::RequestBag requestBag);
+        const ControllerMap& getController(const char* verb);
     public:
         explicit ControllerHandler();
         virtual ~ControllerHandler();
 
-        Model::Result deliverProcessing(Network::RequestBag request);
-        void load();
+        Model::Result deliverProcessing(Network::RequestBag requestBag);
+        void configure();
 
-        Model::ModelHandler* operator[](const char* indexKey);
 
     };
 

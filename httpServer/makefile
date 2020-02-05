@@ -30,6 +30,7 @@ Scheduler.o \
 Server.o \
 User.o \
 ControllerHandler.o \
+ControllerMap.o \
 ControllerPair.o \
 Pair.o \
 Map.o \

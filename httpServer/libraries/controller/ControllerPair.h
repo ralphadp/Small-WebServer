@@ -20,6 +20,7 @@ namespace Controller {
 
     public:
         ControllerPair();
+        ControllerPair(const char* key, Model::ModelHandler* value);
 
         virtual ~ControllerPair();
 

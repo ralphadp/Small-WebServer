@@ -25,6 +25,7 @@ RUN g++ -std=c++11 -Wall -o server main.cpp \
 ./libraries/model/item/Server.cpp \
 ./libraries/model/item/User.cpp \
 ./libraries/controller/ControllerHandler.cpp \
+./libraries/controller/ControllerMap.cpp \
 ./libraries/controller/ControllerPair.cpp \
 ./libraries/structure/Pair.cpp \
 ./libraries/structure/Map.cpp \

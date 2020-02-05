@@ -51,6 +51,7 @@ namespace Network {
             }
 
             if (strcmp(pToken, "POST") == 0) {
+                strcpy(m_bag.m_verb, pToken);
                 pToken = strtok(NULL, " ");
                 strcpy(m_bag.m_urlPath, pToken);
 
