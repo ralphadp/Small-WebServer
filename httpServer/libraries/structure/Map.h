@@ -20,7 +20,7 @@ namespace Structure {
 
         void add(Pair* item);
         const char *operator[](const char *key);
-        bool getLength();
+        unsigned int getLength();
     };
 }
 

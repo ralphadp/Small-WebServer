@@ -41,7 +41,7 @@ namespace Structure {
         return "Unknown";
     }
 
-    bool Map::getLength() {
+    unsigned int Map::getLength() {
         return m_index;
     }
 }
