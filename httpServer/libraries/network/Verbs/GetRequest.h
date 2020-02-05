@@ -11,7 +11,7 @@
 #include "../Request.h"
 #include "../Configuration.h"
 #include "../../controller/ControllerHandler.h"
-#include "../Map.h"
+#include "../../structure/Map.h"
 
 namespace Network {
 
@@ -30,7 +30,7 @@ namespace Network {
             char *extf;
             char *rangetmp;
             long range;
-            Map m_query;
+            Structure::Map m_query;
         public:
             GetRequest(File *file, Configuration *config, Controller::ControllerHandler *controller);
 

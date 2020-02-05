@@ -4,7 +4,7 @@
 
 #include "Map.h"
 
-namespace Network {
+namespace Structure {
 
     Map::Map() {
         m_pMmap = new Pair*[MAX_ITEMS];
@@ -15,7 +15,6 @@ namespace Network {
         for(unsigned int index = 0; index < MAX_ITEMS; index++) {
             delete m_pMmap[index];
         }
-        delete [] m_pMmap;
     }
 
     void Map::add(Pair* item) {

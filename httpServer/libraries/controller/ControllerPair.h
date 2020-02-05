@@ -9,17 +9,14 @@
 
 #include "../model/ModelHandler.h"
 #include "../Util.h"
+#include "../network/UrlParts.h"
 
 namespace Controller {
 
     class ControllerPair {
         char *m_key;
         Model::ModelHandler* m_controller;
-        char** m_pathParts;
-        unsigned int MAX_URL_PARTS;
-
-        unsigned int getPathPartsLength(const char* key);
-        void storePathParts(const char* key);
+        Network::UrlParts m_pathParts;
 
     public:
         ControllerPair();
@@ -34,7 +31,7 @@ namespace Controller {
 
         void setValue(Model::ModelHandler* value);
 
-        char** getPathParts();
+        Network::UrlParts getPathParts();
 
         unsigned int getMaxLengthParts();
     };

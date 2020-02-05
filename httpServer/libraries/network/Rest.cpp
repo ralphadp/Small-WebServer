@@ -7,52 +7,9 @@
 namespace Network {
 
     Rest::Rest() {
-
     }
 
     Rest::~Rest() {
-        for(unsigned int index = 0; index < MAX_URL_PARTS; index++) {
-            delete [] m_urlParts[index];
-        }
-    }
-
-    unsigned int Rest::getUrlPartsLength(const char* urlPath) {
-        char* url = Util::clone(urlPath);
-
-        char* part = strtok(url, "/");
-        unsigned int count = 0;
-
-        while(part) {
-            if (strlen(part)) {
-                count++;
-            }
-            part = strtok(NULL, "/");
-        }
-
-        delete url;
-        MAX_URL_PARTS = count;
-
-        return count;
-    }
-
-    void Rest::storeUrlParts(const char* urlPath) {
-        char* url = Util::clone(urlPath);
-
-        m_urlParts = new char*[MAX_URL_PARTS];
-        unsigned int index = 0;
-
-        char* part = strtok(url, "/");
-        while(part) {
-            unsigned int lengthPart = strlen(part);
-            m_urlParts[index] = new char[lengthPart + 1];
-            strcpy(m_urlParts[index], part);
-            m_urlParts[index][lengthPart] = 0;
-
-            part = strtok(NULL, "/");
-            index++;
-        }
-
-        delete [] url;
     }
 
     void Rest::parseParameters(const char* parameters) {
@@ -71,7 +28,7 @@ namespace Network {
             strcpy(PARAM, pParameter);
             char* token = strtok(PARAM, "=");
             while(token) {
-                Pair* pair = new Pair();
+                Structure::Pair* pair = new Structure::Pair();
                 pair->setKey(token);
 
                 token = strtok(NULL, "=");
@@ -87,46 +44,45 @@ namespace Network {
 
     Controller::ControllerPair* Rest::processParams(Controller::ControllerPair** controllerMap)
     {
-        if (!m_urlParts) {
+        if (!m_urlParts.size()) {
             Logger::getInstance()->error("Url part list is empty.");
 
             return NULL;
         }
 
         Controller::ControllerPair** iterator = controllerMap;
-        char** part = NULL;
 
         while(*iterator != NULL) {
 
-            if ((*iterator)->getMaxLengthParts() != MAX_URL_PARTS) {
+            if ((*iterator)->getMaxLengthParts() != m_urlParts.size()) {
                 iterator++;
                 continue;
             }
 
             unsigned int index = 0;
-            part = (*iterator)->getPathParts();
+            UrlParts part = (*iterator)->getPathParts();
 
             //The first part of th Rest cannot be variable
             if (strcmp(part[index], m_urlParts[index]) == 0) {
 
                 index++;
                 bool onTrack = true;
-                char* parameters = new char[512];
-                strcpy(parameters, "");
+                char* parametersTape = new char[512];
+                strcpy(parametersTape, "");
 
-                while (index < MAX_URL_PARTS && onTrack) {
+                while (index < m_urlParts.size() && onTrack) {
 
                     if (strcmp(part[index], m_urlParts[index]) != 0) {
                         onTrack = false;
+
                         if (part[index][0] == ':') {
-                            //Is a variable part of Rest
+                            //Is a variable for Rest parameters
 
-                            if (!strlen(parameters)) {
-                                sprintf(parameters, "%s=%s", &part[index][1], m_urlParts[index]);
+                            if (!strlen(parametersTape)) {
+                                sprintf(parametersTape, "%s=%s", &part[index][1], m_urlParts[index]);
                             } else {
-                                sprintf(parameters, "%s&%s=%s", parameters, &part[index][1], m_urlParts[index]);
+                                sprintf(parametersTape, "%s&%s=%s", parametersTape, &part[index][1], m_urlParts[index]);
                             }
-
                             onTrack = true;
                         }
                     } else {
@@ -137,14 +93,15 @@ namespace Network {
                 }
 
                 if (onTrack) {
-                    Logger::getInstance()->info("Rest variables tape: '%s'", parameters);
+                    Logger::getInstance()->info("Rest variables tape: '%s'", parametersTape);
 
-                    parseParameters(parameters);
+                    parseParameters(parametersTape);
+                    delete [] parametersTape;
 
                     return *iterator;
                 }
 
-                delete [] parameters;
+                delete [] parametersTape;
             }
 
             iterator++;
@@ -167,13 +124,13 @@ namespace Network {
             return NULL;
         }
 
-        getUrlPartsLength(urlPath);
-        storeUrlParts(urlPath);
+        m_urlParts.getUrlPartsLength(urlPath);
+        m_urlParts.storeUrlParts(urlPath);
 
         return processParams(controllerMap);
     }
 
-    const Map& Rest::getParameters() {
+    const Structure::Map& Rest::getParameters() {
         return m_parameters;
     }
 }

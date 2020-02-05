@@ -20,7 +20,7 @@ namespace Network {
             lines = NULL;
             postLine = NULL;
 
-            headers = new Pair *[MAX];
+            headers = new Structure::Pair *[MAX];
             headerIndex = 0;
             strcpy(bufferContent, "");
         }
@@ -80,7 +80,7 @@ namespace Network {
 
             if (strstr(this->headerList, pToken)) {
 
-                headers[headerIndex] = new Pair;
+                headers[headerIndex] = new Structure::Pair;
                 headers[headerIndex]->setKey(pToken);
                 pToken = strtok(NULL, " ");
 
@@ -101,7 +101,7 @@ namespace Network {
                 return NULL;
             }
 
-            Pair **iterator = headers;
+            Structure::Pair **iterator = headers;
             while (*iterator != NULL) {
                 if ((*iterator)->hasKey(indexKey)) {
                     return (*iterator)->getValue();

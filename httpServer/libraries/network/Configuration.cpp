@@ -14,7 +14,7 @@ Configuration::Configuration() {
 	directory = new Directory("./config/");
 	assembler = new FileAssembler(directory, filename);
 	m_configFile = new File(assembler);
-    configMap = new Pair*[MAX];
+    configMap = new Structure::Pair*[MAX];
 }
 
 Configuration::Configuration(File* configFile) {
@@ -22,7 +22,7 @@ Configuration::Configuration(File* configFile) {
 	directory = NULL;
 	assembler = NULL;
 	m_configFile = configFile;
-    configMap = new Pair*[MAX];
+    configMap = new Structure::Pair*[MAX];
 }
 
 Configuration::~Configuration() {
@@ -74,7 +74,7 @@ bool Configuration::read() {
             continue;
         }
 
-        configMap[index] = new Pair;
+        configMap[index] = new Structure::Pair;
         configMap[index]->setKey(pch);
         pch = strtok(NULL, "=");
         if (!pch) {
@@ -150,7 +150,7 @@ const char* Configuration::operator[](const char* indexKey)
         return "";
     }
 
-    Pair** iterator = configMap;
+    Structure::Pair** iterator = configMap;
     while(*iterator != NULL) {
         if ((*iterator)->hasKey(indexKey)) {
             return (*iterator)->getValue();

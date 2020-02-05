@@ -20,7 +20,7 @@
 #include "../Filename.h"
 #include "../Directory.h"
 #include "../file.h"
-#include "Pair.h"
+#include "../structure/Pair.h"
 
 namespace Network {
 
@@ -28,7 +28,7 @@ class Configuration {
 
 	const unsigned int MAX = 6;
 
-    Pair** configMap;
+    Structure::Pair** configMap;
 
 	File* m_configFile;
 

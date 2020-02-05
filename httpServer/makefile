@@ -33,13 +33,15 @@ ControllerHandler.o \
 ControllerPair.o \
 Pair.o \
 Map.o \
+StringList.o \
 Configuration.o \
 GetRequest.o \
 PostRequest.o \
 HttpRequestHandler.o \
 Request.o \
 RequestBag.o \
-Rest.o
+Rest.o \
+UrlParts.o
 
 OBJ_FILES = $(addprefix $(OBJECTS_DIR)/, $(OBJS))
 
@@ -82,6 +84,10 @@ $(OBJECTS_DIR)/%.o: libraries/network/%.cpp
 	$(CXX) -c $< -o $@ $(CXXFLAGS)
 
 $(OBJECTS_DIR)/%.o: libraries/network/Verbs/%.cpp
+	@echo -e $(GREEN)Compiling $<$(NC)
+	$(CXX) -c $< -o $@ $(CXXFLAGS)
+
+$(OBJECTS_DIR)/%.o: libraries/structure/%.cpp
 	@echo -e $(GREEN)Compiling $<$(NC)
 	$(CXX) -c $< -o $@ $(CXXFLAGS)
 

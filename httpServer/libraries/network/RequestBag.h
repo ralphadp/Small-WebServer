@@ -7,7 +7,7 @@
 
 #include <string.h>
 
-#include "Map.h"
+#include "../structure/Map.h"
 
 namespace Network {
 
@@ -18,7 +18,7 @@ namespace Network {
         char m_version[16];
         char *m_message;
         unsigned int contentMessageLength;
-        Network::Map m_restParameters;
+        Structure::Map m_restParameters;
 
         RequestBag();
         ~RequestBag();
@@ -26,11 +26,10 @@ namespace Network {
         const char* getContents();
         const char* getUrlPath();
         const char* getVersion();
-        void setContents(const char *content);
-        void copyRestParams(const Network::Map&  restParameters);
+        bool setContents(const char *content);
+        void copyRestParams(const Structure::Map&  restParameters);
 
     };
 }
-
 
 #endif //SERVER_REQUESTBAG_H

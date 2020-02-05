@@ -12,7 +12,7 @@ namespace Network {
     }
 
     RequestBag::~RequestBag() {
-        delete m_message;
+        delete [] m_message;
     }
 
     const char* RequestBag::getContents() {
@@ -27,13 +27,25 @@ namespace Network {
         return m_version;
     }
 
-    void RequestBag::setContents(const char *content) {
-        m_message = new char[contentMessageLength + 1];
-        strncpy(m_message, content, contentMessageLength);
-        m_message[contentMessageLength] = '\0';
+    bool RequestBag::setContents(const char *content) {
+        unsigned int length = strlen(content);
+
+        if (!content) {
+            return false;
+        }
+
+        if (!length) {
+            return false;
+        }
+
+        m_message = new char[length + 1];
+        strncpy(m_message, content, length);
+        m_message[length] = '\0';
+
+        return true;
     }
 
-    void RequestBag::copyRestParams(const Network::Map& restParameters) {
+    void RequestBag::copyRestParams(const Structure::Map& restParameters) {
         m_restParameters = restParameters;
     }
 

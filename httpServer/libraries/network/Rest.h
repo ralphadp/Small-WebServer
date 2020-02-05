@@ -9,18 +9,16 @@
 
 #include "../Logger.h"
 #include "../controller/ControllerPair.h"
-#include "Map.h"
+#include "../structure/Map.h"
+#include "UrlParts.h"
 
 namespace Network {
 
     class Rest {
-        unsigned int MAX_URL_PARTS;
-        char** m_urlParts;
+        UrlParts m_urlParts;
     protected:
-        Map m_parameters;
+        Structure::Map m_parameters;
 
-        unsigned int getUrlPartsLength(const char* url);
-        void storeUrlParts(const char* url);
         void parseParameters(const char* parameters);
         Controller::ControllerPair* processParams(Controller::ControllerPair** controllerMap);
     public:
@@ -28,9 +26,8 @@ namespace Network {
         virtual ~Rest();
 
         Controller::ControllerPair* process(const char* urlPath, Controller::ControllerPair** controllerMap);
-        const Map& getParameters();
+        const Structure::Map& getParameters();
     };
 }
-
 
 #endif //SERVER_REST_H

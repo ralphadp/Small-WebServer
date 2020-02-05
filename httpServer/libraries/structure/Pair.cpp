@@ -4,31 +4,31 @@
 
 #include "Pair.h"
 
-namespace Network {
+namespace Structure {
 
     Pair::Pair() {
-        key = new char[24];
-        value = new char[72];
+        m_key = new char[24];
+        m_value = new char[72];
     }
 
     Pair::~Pair() {
-        delete [] key;
-        delete [] value;
+        delete [] m_key;
+        delete [] m_value;
     }
 
     bool Pair::hasKey(const char *key) {
-        return strcmp(this->key, key) == 0;
+        return strcmp(m_key, key) == 0;
     }
 
     const char *Pair::getValue() {
-        return value;
+        return m_value;
     }
 
     void Pair::setKey(const char *key) {
-        strcpy(this->key, key);
+        strcpy(m_key, key);
     }
 
     void Pair::setValue(const char *value) {
-        strcpy(this->value, value);
+        strcpy(m_value, value);
     }
 }

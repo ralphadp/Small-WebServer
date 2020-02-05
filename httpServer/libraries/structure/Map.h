@@ -7,7 +7,7 @@
 
 #include "Pair.h"
 
-namespace Network {
+namespace Structure {
 
     class Map {
 

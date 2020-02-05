@@ -9,11 +9,11 @@
 
 #include "../Logger.h"
 
-namespace Network {
+namespace Structure {
 
     class Pair {
-        char* key;
-        char* value;
+        char* m_key;
+        char* m_value;
 
     public:
         Pair();

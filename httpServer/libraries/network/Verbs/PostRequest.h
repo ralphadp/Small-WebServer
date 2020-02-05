@@ -11,7 +11,7 @@
 #include "../Request.h"
 #include "../Configuration.h"
 #include "../../controller/ControllerHandler.h"
-#include "../Pair.h"
+#include "../../structure/Pair.h"
 
 namespace Network {
 
@@ -20,7 +20,7 @@ namespace Network {
         class PostRequest : public Request {
 
             const unsigned int MAX = 12;
-            Pair **headers;
+            Structure::Pair **headers;
             unsigned int headerIndex;
             char bufferContent[1000];
         public:

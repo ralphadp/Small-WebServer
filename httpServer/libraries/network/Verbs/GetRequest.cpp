@@ -54,7 +54,7 @@ namespace Network {
                 strcpy(PARAM, pParameter);
                 char* token = strtok(PARAM, "=");
                 while(token) {
-                    Pair* pair = new Pair();
+                    Structure::Pair* pair = new Structure::Pair();
                     pair->setKey(token);
 
                     token = strtok(NULL, "=");
