@@ -37,9 +37,9 @@ namespace Model {
                 return this->m_pAction(parameters, templateContent);
             }
 
-            return Result(Model::getInvalidTokenTemplate());
+            return Result(Model::getInvalidTokenTemplate(), false);
         }
 
-        return Result(Model::getErrorTemplate());
+        return Result(Model::getErrorTemplate(), false);
     }
 }

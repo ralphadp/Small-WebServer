@@ -14,21 +14,20 @@ namespace Network {
     RequestBag::~RequestBag() {
         delete [] m_message;
     }
-
-    const char* RequestBag::getVerb() {
-        return m_verb;
+    void RequestBag::setVerb(const char* verb) {
+        strcpy(m_verb, verb);
     }
 
-    const char* RequestBag::getContents() {
-        return m_message;
+    void RequestBag::setUrlPath(const char* url) {
+        strcpy(m_urlPath, url);
     }
 
-    const char* RequestBag::getUrlPath() {
-        return m_urlPath;
+    void RequestBag::setVersion(const char* version) {
+        strcpy(m_version, version);
     }
 
-    const char* RequestBag::getVersion() {
-        return m_version;
+    void RequestBag::setMessageLength(unsigned int length) {
+        contentMessageLength = length;
     }
 
     bool RequestBag::setContents(const char *content) {
@@ -49,8 +48,58 @@ namespace Network {
         return true;
     }
 
+    const char* RequestBag::getVerb() const {
+        return m_verb;
+    }
+
+    const char* RequestBag::getContents() const {
+        return m_message;
+    }
+
+    unsigned int RequestBag::getContentLength() const {
+        return contentMessageLength;
+    }
+
+    const char* RequestBag::getUrlPath() const {
+        return m_urlPath;
+    }
+
+    const char* RequestBag::getVersion() const {
+        return m_version;
+    }
+
     void RequestBag::copyRestParams(const Structure::Map& restParameters) {
         m_restParameters = restParameters;
+    }
+
+    Structure::Map& RequestBag::getRestParameters() {
+        return m_restParameters;
+    }
+
+    void RequestBag::copyQueryParams(const Structure::Map& restParameters) {
+        m_queryParameters = restParameters;
+    }
+
+    Structure::Map& RequestBag::getQueryParameters() {
+        return m_queryParameters;
+    }
+
+    /**
+     * Does the url has a query part
+     * @param path
+     * @return
+     */
+    bool RequestBag::hasQuery() {
+        return strchr(m_urlPath, '?') != NULL;
+    }
+
+    /**
+     * Removes the query from path
+     * @param path
+     * @return
+     */
+    char* RequestBag::removeQueryFromUrl() {
+        return strtok(m_urlPath, "?");
     }
 
 }

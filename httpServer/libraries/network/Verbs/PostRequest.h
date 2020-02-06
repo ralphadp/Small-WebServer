@@ -19,10 +19,6 @@ namespace Network {
 
         class PostRequest : public Request {
 
-            const unsigned int MAX = 12;
-            Structure::Pair **headers;
-            unsigned int headerIndex;
-            char bufferContent[1000];
         public:
             PostRequest(File *file, Configuration *config, Controller::ControllerHandler *controller);
 
@@ -31,14 +27,6 @@ namespace Network {
             void prepare(char *lines);
 
             void process();
-
-            const char *operator[](const char *indexKey);
-
-        private:
-
-            bool parsePath(const char *line);
-
-            bool parseHeader(const char *line);
 
             bool parseContent(const char *line);
         };

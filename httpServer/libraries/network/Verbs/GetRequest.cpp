@@ -17,22 +17,19 @@ namespace Network {
                 Controller::ControllerHandler *controller
         ) : Request(file, config, controller) {
             result = NULL;
-            hostname = NULL;
+
             hostnamef = NULL;
             ext = NULL;
             extf = NULL;
-            postLine = NULL;
-
-            lines = NULL;
 
             rangetmp = NULL;
             range = 0;
             strcpy(code, "");
+            strcpy(VERB, "GET");
         }
 
         GetRequest::~GetRequest() {
-            delete[] lines;
-            delete[] postLine;
+
         }
 
         bool GetRequest::parseQuery(const char* path) {
@@ -53,21 +50,34 @@ namespace Network {
                 char PARAM[512];
                 strcpy(PARAM, pParameter);
                 char* token = strtok(PARAM, "=");
+
                 while(token) {
+
                     Structure::Pair* pair = new Structure::Pair();
                     pair->setKey(token);
-
                     token = strtok(NULL, "=");
                     if (token) {
                         pair->setValue(token);
                         m_query.add(pair);
                     }
+                    token = strtok(NULL, "=");
                 }
 
-                pParameter = strtok(NULL, "&");
+                pParameter = strtok(pParameter + strlen(pParameter) + 1, "&");
             }
 
             return true;
+        }
+
+        void GetRequest::setNotFound() {
+            Filename fileNotFound("404.html");
+            strcat(file, fileNotFound.get());
+            Directory dir("/");
+
+            FileAssembler assembler(&dir, &fileNotFound);
+            pfile->setFileAssembler(&assembler);
+            pfile->open(FileAction::Type::READ);
+            strcpy(code, "404 Not Found");
         }
 
         void GetRequest::prepare(char *message) {
@@ -79,36 +89,39 @@ namespace Network {
             }
 
             Logger::getInstance()->info("GET message:\n%s", message);
-            char *lines = strtok(message, "\n\r");
+            postLine = strtok(message, "\n\r");
 
-            do {
-                hostname = strtok(NULL, "\n\r");
-                hostnamef = strtok(hostname, " ");
+            while (postLine) {
+                if (parsePath(postLine)) {
 
-                if (strcmp(hostnamef, "Range:") == 0) {
-                    rangetmp = hostname;
-                    strcpy(code, "206 Partial Content");
+                    if (m_bag.hasQuery()) {
+                        if(parseQuery(m_bag.getUrlPath())) {
+                            m_bag.copyQueryParams(m_query);
+                        }
+                        result = m_bag.removeQueryFromUrl();
+                    } else {
+                        result = const_cast<char*>(m_bag.getUrlPath());
+                    }
+
+                } else {
+                    parseHeader(postLine);
                 }
-            } while (strcmp(hostnamef, "Host:") != 0);
 
-            hostnamef = strtok(NULL, " ");
+                postLine = strtok(postLine + strlen(postLine) + 1, "\n\r");
+            }
 
-            result = strtok(lines, " ");
-            result = strtok(NULL, " ");
+            hostnamef = const_cast<char*>(this->operator[]("Host:"));
 
-            if (strcmp(code, "206 Partial Content") == 0) {
+            if (this->operator[]("Range:")) {
+                rangetmp= const_cast<char*>(this->operator[]("Range:"));
+                strcpy(code, "206 Partial Content");
+
                 rangetmp = strtok(strpbrk(rangetmp, "="), "=-");
                 range = atoi(rangetmp);
             }
 
-            if (hasQuery(result)) {
-                parseQuery(result);
-                depreciateQuery(result);
-            }
-
             strcpy(file, result);
             Directory dir(result);
-            Filename fileNotFound("404.html");
 
             if (dir.exists()) {
                 if (file[strlen(file) - 1] == '/') {
@@ -121,13 +134,7 @@ namespace Network {
                         strcpy(code, "200 OK");
                     } else {
                         //Here should be some kind of directory listing
-                        strcat(file, fileNotFound.get());
-                        dir.set("/");
-
-                        FileAssembler assembler(&dir, &fileNotFound);
-                        pfile->setFileAssembler(&assembler);
-                        pfile->open(FileAction::Type::READ);
-                        strcpy(code, "404 Not Found");
+                        setNotFound();
                     }
                 } else {
                     strcpy(code, "301 Moved Permanently");
@@ -139,23 +146,47 @@ namespace Network {
             } else {
                 //get file descriptor for founded file
                 if (pfile->open(result, FileAction::Type::READ)) {
-                    if (strlen(code) < 1) {
-                        strcpy(code, "200 OK");
-                    }
+                    strcpy(code, "200 OK");
                 } else {
-
-                    strcpy(file, fileNotFound.get());
-                    dir.set("/");
-
-                    FileAssembler assembler(&dir, &fileNotFound);
-                    pfile->setFileAssembler(&assembler);
-                    pfile->open(FileAction::Type::READ);
-                    strcpy(code, "404 Not Found");
+                    setNotFound();
                 }
             }
         }
 
         void GetRequest::process() {
+
+            if (strcmp(code, "404 Not Found") == 0) {
+                Model::Result result = pController->deliverProcessing(m_bag);
+
+                if (result.isSucess()) {
+                    sprintf(length, "%ld", (long) result.getLength());
+
+                    //create response header
+                    strcpy(sent, "HTTP/1.1 200 OK");
+                    strcat(sent, "\nServer: httpd 0.3.1\n");
+                    strcat(sent, "Content-Length: ");
+                    strcat(sent, length);
+                    strcat(sent, "\nConnection: close\nContent-Type: ");
+                    strcat(sent, "application/json");
+                    strcat(sent, ";charset=");
+                    strcat(sent, (*pConfig)["CHARSET"]);
+                    strcat(sent, "\n\n");
+                    printf("%s", sent);
+                    pfile->write(sent);
+
+                    //create response payload
+                    strcpy(sent, result.getPayload());
+                    //Note.- The header and the payload are sent separately
+                    Logger::getInstance()->info("Deliver payload: %s", sent);
+
+                    pfile->write(sent);
+
+                    //close the new_fd Copy
+                    pfile->closeFD();
+
+                    return;
+                }
+            }
 
             if (!strlen(code)) {
                 Logger::getInstance()->warning("No code to check.");

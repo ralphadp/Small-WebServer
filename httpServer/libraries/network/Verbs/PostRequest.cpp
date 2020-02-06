@@ -16,101 +16,11 @@ namespace Network {
                 Configuration *config,
                 Controller::ControllerHandler *controller
         ) : Request(file, config, controller) {
-
-            lines = NULL;
-            postLine = NULL;
-
-            headers = new Structure::Pair *[MAX];
-            headerIndex = 0;
-            strcpy(bufferContent, "");
+            strcpy(VERB, "POST");
         }
 
         PostRequest::~PostRequest() {
-            delete[] lines;
-            delete[] postLine;
 
-            for (unsigned int index = 0; index < MAX; index++) {
-                delete headers[index];
-            }
-            delete [] headers;
-        }
-
-        bool PostRequest::parsePath(const char *line) {
-
-            if (!line) {
-                return false;
-            }
-
-            char headerLine[strlen(line)];
-            strcpy(headerLine, line);
-
-            char *pToken = strtok(headerLine, " ");
-
-            if (!pToken) {
-                return false;
-            }
-
-            if (strcmp(pToken, "POST") == 0) {
-                strcpy(m_bag.m_verb, pToken);
-                pToken = strtok(NULL, " ");
-                strcpy(m_bag.m_urlPath, pToken);
-
-                pToken = strtok(NULL, " ");
-                strcpy(m_bag.m_version, pToken);
-
-                return true;
-            }
-
-            return false;
-        }
-
-        bool PostRequest::parseHeader(const char *line) {
-
-            if (!line) {
-                return false;
-            }
-
-            char headerLine[strlen(line)];
-            strcpy(headerLine, line);
-
-            char *pToken = strtok(headerLine, " ");
-
-            if (!pToken) {
-                return false;
-            }
-
-            if (strstr(this->headerList, pToken)) {
-
-                headers[headerIndex] = new Structure::Pair;
-                headers[headerIndex]->setKey(pToken);
-                pToken = strtok(NULL, " ");
-
-                headers[headerIndex]->setValue(pToken);
-                headerIndex++;
-                headers[headerIndex] = NULL;
-
-                return true;
-            }
-
-            return false;
-        }
-
-        const char *PostRequest::operator[](const char *indexKey) {
-            if (!indexKey || strlen(indexKey) == 0) {
-                Logger::getInstance()->warning("Post header key is null");
-
-                return NULL;
-            }
-
-            Structure::Pair **iterator = headers;
-            while (*iterator != NULL) {
-                if ((*iterator)->hasKey(indexKey)) {
-                    return (*iterator)->getValue();
-                }
-                iterator++;
-            }
-
-            return NULL;
         }
 
         bool PostRequest::parseContent(const char *line) {
@@ -122,14 +32,14 @@ namespace Network {
             char content[strlen(line)];
             strcpy(content, line);
 
-            if (this->m_bag.m_message) {
+            if (m_bag.getContents()) {
                 //The message was already read
                 return false;
             }
 
             const char *contentType = this->operator[]("content-type:");
-            if (!m_bag.contentMessageLength) {
-                m_bag.contentMessageLength = atoi(this->operator[]("Content-Length:"));
+            if (!m_bag.getContentLength()) {
+                m_bag.setMessageLength(atoi(this->operator[]("Content-Length:")));
             }
 
             if (strcmp(contentType, "application/json") == 0
@@ -150,7 +60,7 @@ namespace Network {
                     strcat(bufferContent, content);
                 }
 
-                if (strlen(bufferContent) >= m_bag.contentMessageLength) {
+                if (strlen(bufferContent) >= m_bag.getContentLength()) {
                     m_bag.setContents(bufferContent);
                 }
 
@@ -179,8 +89,8 @@ namespace Network {
 
                 if (parsePath(postLine)) {
 
-                    if (hasQuery(m_bag.m_urlPath)) {
-                        depreciateQuery(m_bag.m_urlPath);
+                    if (m_bag.hasQuery()) {
+                        m_bag.removeQueryFromUrl();
                     }
 
                 } else if (parseHeader(postLine)) {
@@ -195,7 +105,14 @@ namespace Network {
 
         void PostRequest::process() {
 
-            Model::Result result = pController->deliverProcessing(m_bag);
+            Model::Result result(NULL, false);
+
+            if (!m_bag.getContents()) {
+                Logger::getInstance()->error("The content is empty, cannot be processed in the Model");
+                result = Model::Result("{\"success\":false,\"message\":\"Server error 101\"}", false);
+            } else {
+                result = pController->deliverProcessing(m_bag);
+            }
 
             sprintf(length, "%ld", (long) result.getLength());
 

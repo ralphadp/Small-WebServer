@@ -6,8 +6,8 @@
 
 namespace Model {
 
-    const char* Model::defaultInvalidTemplate = "{\"sucess\":\"false\",\"message\":\"No access allowed\"}";
-    const char* Model::defaultErrorTemplate = "{\"sucess\":\"false\",\"message\":\"Server Error 101\"}";
+    const char* Model::defaultInvalidTemplate = "{\"sucess\":false,\"message\":\"No access allowed\"}";
+    const char* Model::defaultErrorTemplate = "{\"sucess\":false,\"message\":\"Server Error 104\"}";
 
     bool Model::verifyToken(const char* parameters) {
         //TODO: verify the token

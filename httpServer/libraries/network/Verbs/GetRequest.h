@@ -24,12 +24,13 @@ namespace Network {
             char mime[100];
 
             char *result;
-            char *hostname;
+
             char *hostnamef;
             char *ext;
             char *extf;
             char *rangetmp;
             long range;
+
             Structure::Map m_query;
         public:
             GetRequest(File *file, Configuration *config, Controller::ControllerHandler *controller);
@@ -41,6 +42,8 @@ namespace Network {
             void process();
 
             bool parseQuery(const char* path);
+
+            void setNotFound();
         };
 
     } /* namespace Verbs */

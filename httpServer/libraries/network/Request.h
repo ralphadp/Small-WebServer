@@ -30,10 +30,18 @@ namespace Network {
         char *postLine;
         const char* headerList;
 
+        char VERB[8];
         File* pfile;
         Configuration* pConfig;
         Controller::ControllerHandler* pController;
 
+        const unsigned int MAX = 12;
+        Structure::Pair **headers;
+        unsigned int headerIndex;
+        char bufferContent[1000];
+
+        bool parsePath(const char *line);
+        bool parseHeader(const char *line);
 
     public:
         Request(File* file, Configuration* config, Controller::ControllerHandler* controller);
@@ -42,8 +50,7 @@ namespace Network {
         virtual void prepare(char* lines) = 0;
         virtual void process() = 0;
 
-        bool hasQuery(const char* path);
-        char* depreciateQuery(char* path);
+        const char *operator[](const char *indexKey);
 
     };
 

@@ -12,12 +12,14 @@ namespace Model {
     class Result {
         unsigned int m_length;
         const char* m_content;
+        bool m_success;
     public:
-        Result(const char* payload);
+        Result(const char* payload, bool success);
         virtual ~Result();
 
         unsigned int getLength();
         const char* getPayload();
+        bool isSucess();
     };
 }
 

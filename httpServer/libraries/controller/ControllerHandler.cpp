@@ -46,25 +46,22 @@ namespace Controller {
 
     Model::Result ControllerHandler::deliverProcessing(Network::RequestBag requestBag) {
 
-        if (!requestBag.getUrlPath() || !requestBag.getContents()) {
-            Logger::getInstance()->error("The path or the content is NULL, cannot be processed in the Model");
+        if (!requestBag.getUrlPath()) {
+            Logger::getInstance()->error("The path is empty, cannot be processed in the Model");
 
-            return Model::Result("{\"success\":\"false\",\"message\":\"Server error 100\"}");
+            return Model::Result("{\"success\":\"false\",\"message\":\"Server error 102\"}", false);
         }
 
         Model::ModelHandler* model = fetchModel(requestBag);
 
         if (!model) {
-            return Model::Result("{\"success\":\"false\",\"message\":\"Server error 102\"}");
+            return Model::Result("{\"success\":\"false\",\"message\":\"Server error 103\"}", false);
         }
 
         return model->process(requestBag);
     }
 
     void  ControllerHandler::configure() {
-        addPOST("/config", new Model::ModelHandler(
-                Model::Item::Config::init, "./templates/json/init_response.json"
-        ));
         addPOST("/login", new Model::ModelHandler(
                 Model::Item::User::login, "./templates/json/login_response.json"
         ));
@@ -77,13 +74,8 @@ namespace Controller {
         addPOST("not-found", new Model::ModelHandler(
                 Model::Item::Server::notFound, "./templates/json/not-found.json"
         ));
-        //for(int ptr = 0; ptr < 5; ptr++) {
-        //    for (int index = 0; index < m_controllerMap[ptr]->getMaxLengthParts(); index++) {
-        //        Logger::getInstance()->info("controller[%d]:%s", ptr, m_controllerMap[ptr]->getPathParts()[index]);
-        //    }
-        //}
-        addGET("config", new Model::ModelHandler(
-                Model::Item::Server::notFound, "./templates/json/not-found.json"
+        addGET("/config", new Model::ModelHandler(
+                Model::Item::Config::init, "./templates/json/init_response.json"
         ));
 
     }

@@ -17,7 +17,7 @@ namespace Model {
         }
 
         Result User::login(Network::RequestBag params, const char* templateContent) {
-            Logger::getInstance()->info("::%s request rest params: %d", __func__, params.m_restParameters.getLength());
+            Logger::getInstance()->info("::%s request rest params: %d", __func__, params.getRestParameters().getLength());
 
             bool passed = checkCredentials();
 
@@ -32,10 +32,10 @@ namespace Model {
                     sprintf(payload, templateContent, token, success);
                     payload[payloadLength] = 0;
 
-                    return Result(payload);
+                    return Result(payload, true);
             }
 
-            return Result(defaultBadCredentialsTemplate);
+            return Result(defaultBadCredentialsTemplate, false);
         }
     }
 }

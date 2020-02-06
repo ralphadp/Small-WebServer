@@ -6,9 +6,10 @@
 
 namespace Model {
 
-    Result::Result(const char* payload) {
+    Result::Result(const char* payload, bool success = true) {
         m_content = payload;
-        m_length = strlen(m_content);
+        m_length = payload ? strlen(m_content) : 0;
+        m_success = success;
     }
 
     Result::~Result() {
@@ -22,5 +23,9 @@ namespace Model {
 
     const char* Result::getPayload() {
         return m_content;
+    }
+
+    bool Result::isSucess() {
+        return m_success;
     }
 }

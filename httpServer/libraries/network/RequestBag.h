@@ -7,30 +7,42 @@
 
 #include <string.h>
 
+
 #include "../structure/Map.h"
 
 namespace Network {
 
     class RequestBag {
-
-    public:
         char m_verb[8];
         char m_urlPath[256];
         char m_version[16];
         char *m_message;
         unsigned int contentMessageLength;
         Structure::Map m_restParameters;
+        Structure::Map m_queryParameters;
+    public:
 
         RequestBag();
         ~RequestBag();
 
-        const char* getVerb();
-        const char* getContents();
-        const char* getUrlPath();
-        const char* getVersion();
+        void setVerb(const char* verb);
+        void setUrlPath(const char* url);
+        void setVersion(const char* version);
+        void setMessageLength(unsigned int length);
         bool setContents(const char *content);
-        void copyRestParams(const Structure::Map&  restParameters);
+        const char* getVerb() const;
+        const char* getContents() const;
+        unsigned int getContentLength() const;
+        const char* getUrlPath() const;
+        const char* getVersion() const;
+        Structure::Map& getRestParameters();
+        void copyRestParams(const Structure::Map& restParameters);
+        /*TODO: Query parameters should be defined and implemented in a inherited class*/
+        Structure::Map& getQueryParameters();
+        void copyQueryParams(const Structure::Map& restParameters);
 
+        bool hasQuery();
+        char* removeQueryFromUrl();
     };
 }
 
