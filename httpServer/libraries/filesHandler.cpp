@@ -17,9 +17,9 @@ FilesHandler::~FilesHandler() {
 	}
 }
 
-bool FilesHandler::getData(const char* sfilename, char* data, InternalDirectory::DirectoyType type) {
+bool FilesHandler::getData(const char* requestedFilename, char* data, InternalDirectory::DirectoryType type) {
 	int index = 0;
-	Filename* filename = new Filename(sfilename);
+	Filename* filename = new Filename(requestedFilename);
 	FileAssembler* fileContainer = new FileAssembler(mainDirectory, filename);
 	File* temporal = new File(fileContainer);
 
@@ -45,4 +45,8 @@ bool FilesHandler::getData(const char* sfilename, char* data, InternalDirectory:
 	delete filename;
 
 	return false;
+}
+
+void FilesHandler::setParentPathDirectory(const char* directory) {
+
 }

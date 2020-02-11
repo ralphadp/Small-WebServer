@@ -10,9 +10,11 @@
 
 #include <stdio.h>
 
+#include "Global.h"
+
 class InternalDirectory {
 public:
-	enum DirectoyType {
+	enum DirectoryType {
 		JSON = 0,
 		XML,
 		HTML,
@@ -30,8 +32,8 @@ public:
 	~InternalDirectory();
 
 	void loadDirectories();
-	void unloadloadDirectories();
-	const char* get(DirectoyType type, unsigned int index);
+	void unloadDirectories();
+	const char* get(DirectoryType type, unsigned int index);
 };
 
 #endif /* SRC_LIBRARIES_INTERNALDIRECTORY_H_ */

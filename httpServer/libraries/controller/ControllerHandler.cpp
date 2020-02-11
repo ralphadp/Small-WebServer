@@ -63,19 +63,19 @@ namespace Controller {
 
     void  ControllerHandler::configure() {
         addPOST("/login", new Model::ModelHandler(
-                Model::Item::User::login, "./templates/json/login_response.json"
+                Model::Item::User::login, "login_response.json"
         ));
         addPOST("/schedule", new Model::ModelHandler(
-                Model::Item::Scheduler::getList, "./templates/json/scheduler-list.json"
+                Model::Item::Scheduler::getList, "scheduler-list.json"
         ));
         addPOST("/schedule/:datetime", new Model::ModelHandler(
-                Model::Item::Scheduler::getInfo, "./templates/json/scheduler-info.json"
+                Model::Item::Scheduler::getInfo, "scheduler-info.json"
         ));
         addPOST("not-found", new Model::ModelHandler(
-                Model::Item::Server::notFound, "./templates/json/not-found.json"
+                Model::Item::Server::notFound, "not-found.json"
         ));
         addGET("/config", new Model::ModelHandler(
-                Model::Item::Config::init, "./templates/json/init_response.json"
+                Model::Item::Config::init, "init_response.json"
         ));
 
     }

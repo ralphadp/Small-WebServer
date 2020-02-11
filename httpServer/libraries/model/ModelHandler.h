@@ -5,6 +5,7 @@
 #ifndef SERVER_MODELHANDLER_H
 #define SERVER_MODELHANDLER_H
 
+#include "../Global.h"
 #include "../Logger.h"
 #include "../Filename.h"
 #include "../Directory.h"

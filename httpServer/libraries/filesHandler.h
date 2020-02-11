@@ -24,7 +24,7 @@ public:
 	FilesHandler(const char* mainDirectoryPath = ".");
 	~FilesHandler();
 
-	bool getData(const char* filename, char* data, InternalDirectory::DirectoyType type = InternalDirectory::DirectoyType::JSON);
+	bool getData(const char* filename, char* data, InternalDirectory::DirectoryType type = InternalDirectory::DirectoryType::JSON);
 
 private:
 	void setParentPathDirectory(const char* directory);

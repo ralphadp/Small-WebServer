@@ -12,19 +12,19 @@ InternalDirectory::InternalDirectory() {
 }
 
 InternalDirectory::~InternalDirectory() {
-	unloadloadDirectories();
+	unloadDirectories();
 }
 
 void InternalDirectory::loadDirectories() {
 	//old issue: ** -->   <type>*[bound]
 	this->directoriesList[JSON] = new const char*[JSON_DIR_MAX + 1] {
-		"/templates/json/",
+	    Global::TEMPLATE_JSON_DIRECTORY,
 		"/config/json/",
 		NULL
 	};
 
 	this->directoriesList[XML] = new const char*[XML_DIR_MAX + 1] {
-		"/templates/xml/",
+		Global::TEMPLATE_XML_DIRECTORY,
 		NULL
 	};
 
@@ -41,12 +41,12 @@ void InternalDirectory::loadDirectories() {
 	this->directoriesList[UNKNOWN] = NULL;
 }
 
-void InternalDirectory::unloadloadDirectories() {
+void InternalDirectory::unloadDirectories() {
 	for (unsigned int type = JSON; type < UNKNOWN; type++) {
 		delete [] this->directoriesList[type];
 	}
 }
 
-const char* InternalDirectory::get(DirectoyType type, unsigned int index) {
+const char* InternalDirectory::get(DirectoryType type, unsigned int index) {
 	return this->directoriesList[type][index];
 }

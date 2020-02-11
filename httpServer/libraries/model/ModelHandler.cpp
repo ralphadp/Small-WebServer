@@ -8,11 +8,19 @@ namespace Model {
 
     ModelHandler::ModelHandler(Result (*pActionFunction)(Network::RequestBag, const char*), const char *templateFilename) {
         m_pAction = pActionFunction;
-        m_templateFilename = templateFilename;
+
+        char* complete = new char[strlen(Global::TEMPLATE_JSON_DIRECTORY) + strlen(templateFilename) + 1];
+        strcpy(complete, Global::TEMPLATE_JSON_DIRECTORY);
+        strcat(complete, templateFilename);
+        complete[strlen(Global::TEMPLATE_JSON_DIRECTORY) + strlen(templateFilename)] = 0;
+
+        m_templateFilename = complete;
+
         m_templateFile = new File(NULL);
     }
 
     ModelHandler::~ModelHandler() {
+        delete m_templateFilename;
         delete m_templateFile;
     }
 

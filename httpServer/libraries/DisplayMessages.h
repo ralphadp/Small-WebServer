@@ -8,6 +8,7 @@
 #ifndef SRC_LIBRARIES_DISPLAYMESSAGES_H_
 #define SRC_LIBRARIES_DISPLAYMESSAGES_H_
 
+#include "Global.h"
 #include "Logger.h"
 
 namespace Libraries {
