@@ -5,20 +5,20 @@
 #ifndef SERVER_URLPARTS_H
 #define SERVER_URLPARTS_H
 
-#include "../Logger.h"
-#include "../structure/StringList.h"
+#include "../structure/template/List.h"
+#include "../structure/String.h"
 #include "../Util.h"
 
 namespace Network {
 
+    /**
+     * Wrapper to get url path
+     */
     class UrlParts {
-        unsigned int MAX_URL_PARTS;
-        Structure::StringList* m_urlParts;
-    public:
-        UrlParts();
-        virtual ~UrlParts();
 
-        unsigned int getUrlPartsLength(const char *url);
+        Template::List<Structure::String> m_urlParts;
+    public:
+
         int storeUrlParts(const char *url);
         unsigned int size();
         const char* operator[](unsigned int index);

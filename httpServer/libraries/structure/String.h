@@ -43,6 +43,10 @@ namespace Structure {
         bool operator==(const String &);
 
         unsigned int getHash(unsigned int MAX = 100) const;
+
+        String& operator+=(const char *);
+
+        String& operator+=(const String &);
     };
 
 }

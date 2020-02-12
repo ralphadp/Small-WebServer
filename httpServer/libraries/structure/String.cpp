@@ -73,4 +73,16 @@ namespace Structure {
 
         return hash;
     }
+
+    String& String::operator+=(const char* value) {
+        strcat(m_value, value);
+
+        return *this;
+    }
+
+    String& String::operator+=(const String& string) {
+        strcat(m_value, string.value());
+
+        return *this;
+    }
 }

@@ -24,8 +24,6 @@ namespace Network {
         void parseParameters(const char* parameters);
         Controller::ControllerPair* processParams(Controller::ControllerPair** controllerMap);
     public:
-        Rest();
-        virtual ~Rest();
 
         Controller::ControllerPair* process(const char* urlPath, Controller::ControllerPair** controllerMap);
         Template::Map<Structure::String, Structure::String>& getParameters();

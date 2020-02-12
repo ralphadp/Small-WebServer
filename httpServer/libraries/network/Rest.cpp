@@ -6,12 +6,6 @@
 
 namespace Network {
 
-    Rest::Rest() {
-    }
-
-    Rest::~Rest() {
-    }
-
     void Rest::parseParameters(const char* parameters) {
 
         if (!parameters) {
@@ -121,7 +115,6 @@ namespace Network {
             return NULL;
         }
 
-        m_urlParts.getUrlPartsLength(urlPath);
         m_urlParts.storeUrlParts(urlPath);
 
         return processParams(controllerMap);

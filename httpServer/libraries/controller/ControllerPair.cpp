@@ -18,7 +18,7 @@ namespace Controller {
     }
 
     ControllerPair::~ControllerPair() {
-        delete[] m_key;
+        delete [] m_key;
         delete m_controller;
     }
 
@@ -32,8 +32,6 @@ namespace Controller {
 
     void ControllerPair::setKey(const char *key) {
         strcpy(m_key, key);
-
-        m_pathParts.getUrlPartsLength(key);
         m_pathParts.storeUrlParts(key);
     }
 
