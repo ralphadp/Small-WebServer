@@ -21,19 +21,12 @@ namespace Network {
         pController = controller;
         headerList = "Host:User-Agent:Accept:Accept-Language:Accept-Encoding:content-type:origin:Content-Length:Connection:Renge:";
 
-        headers = new Structure::Pair *[MAX];
-        headerIndex = 0;
         strcpy(bufferContent, "");
     }
 
     Request::~Request() {
         delete [] lines;
         delete [] postLine;
-
-        for (unsigned int index = 0; index < MAX; index++) {
-            delete headers[index];
-        }
-        delete [] headers;
     }
 
     bool Request::parsePath(const char *line) {
@@ -83,38 +76,16 @@ namespace Network {
 
         if (strstr(this->headerList, pToken)) {
 
-            headers[headerIndex] = new Structure::Pair;
-            headers[headerIndex]->setKey(pToken);
+            Structure::String key(pToken);
             pToken = strtok(NULL, " ");
-
-            headers[headerIndex]->setValue(pToken);
-            headerIndex++;
-            headers[headerIndex] = NULL;
+            if (pToken) {
+                headers[key] = pToken;
+            }
 
             return true;
         }
 
         return false;
     }
-
-    const char *Request::operator[](const char *indexKey) {
-        if (!indexKey || strlen(indexKey) == 0) {
-            Logger::getInstance()->warning("Post header key is null");
-
-            return NULL;
-        }
-
-        Structure::Pair **iterator = headers;
-        while (*iterator != NULL) {
-            if ((*iterator)->hasKey(indexKey)) {
-                return (*iterator)->getValue();
-            }
-            iterator++;
-        }
-
-        return NULL;
-    }
-
-
 
 } /* namespace network */

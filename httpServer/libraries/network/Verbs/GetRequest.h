@@ -11,7 +11,8 @@
 #include "../Request.h"
 #include "../Configuration.h"
 #include "../../controller/ControllerHandler.h"
-#include "../../structure/Map.h"
+#include "../../structure/String.h"
+#include "../../structure/template/Map.h"
 
 namespace Network {
 
@@ -23,7 +24,7 @@ namespace Network {
             char moved[200];
             char mime[100];
 
-            char *result;
+            char *resultPath;
 
             char *hostnamef;
             char *ext;
@@ -31,7 +32,7 @@ namespace Network {
             char *rangetmp;
             long range;
 
-            Structure::Map m_query;
+            Template::Map<Structure::String, Structure::String> m_query;
         public:
             GetRequest(File *file, Configuration *config, Controller::ControllerHandler *controller);
 

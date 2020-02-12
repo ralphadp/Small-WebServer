@@ -11,7 +11,6 @@
 #include "../Request.h"
 #include "../Configuration.h"
 #include "../../controller/ControllerHandler.h"
-#include "../../structure/Pair.h"
 
 namespace Network {
 

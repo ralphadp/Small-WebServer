@@ -28,13 +28,10 @@ namespace Network {
             strcpy(PARAM, pParameter);
             char* token = strtok(PARAM, "=");
             while(token) {
-                Structure::Pair* pair = new Structure::Pair();
-                pair->setKey(token);
-
+                Structure::String key(token);
                 token = strtok(NULL, "=");
                 if (token) {
-                    pair->setValue(token);
-                    m_parameters.add(pair);
+                    m_parameters[key] = token;
                 }
             }
 
@@ -130,7 +127,7 @@ namespace Network {
         return processParams(controllerMap);
     }
 
-    const Structure::Map& Rest::getParameters() {
+    Template::Map<Structure::String, Structure::String>& Rest::getParameters() {
         return m_parameters;
     }
 }

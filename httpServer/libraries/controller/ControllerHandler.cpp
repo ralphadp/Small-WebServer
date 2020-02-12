@@ -15,7 +15,7 @@ namespace Controller {
 
     }
 
-    Model::ModelHandler* ControllerHandler::fetchModel(Network::RequestBag requestBag) {
+    Model::ModelHandler* ControllerHandler::fetchModel(Network::RequestBag& requestBag) {
 
         const char* URL_PATH = requestBag.getUrlPath();
 
@@ -53,7 +53,6 @@ namespace Controller {
         }
 
         Model::ModelHandler* model = fetchModel(requestBag);
-
         if (!model) {
             return Model::Result("{\"success\":\"false\",\"message\":\"Server error 103\"}", false);
         }

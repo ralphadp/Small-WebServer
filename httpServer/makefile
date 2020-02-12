@@ -33,6 +33,7 @@ User.o \
 ControllerHandler.o \
 ControllerMap.o \
 ControllerPair.o \
+String.o \
 Pair.o \
 Map.o \
 StringList.o \

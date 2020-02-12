@@ -17,7 +17,7 @@ namespace Model {
         }
 
         Result User::login(Network::RequestBag params, const char* templateContent) {
-            Logger::getInstance()->info("::%s request rest params: %d", __func__, params.getRestParameters().getLength());
+            Logger::getInstance()->info("::%s request rest params: %d", __func__, params.getRestParameters().length());
 
             bool passed = checkCredentials();
 

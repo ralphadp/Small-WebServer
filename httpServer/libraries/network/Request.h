@@ -17,6 +17,9 @@
 
 #include "RequestBag.h"
 
+#include "../structure/String.h"
+#include "../structure/template/Map.h"
+
 namespace Network {
 
     class Request {
@@ -35,9 +38,7 @@ namespace Network {
         Configuration* pConfig;
         Controller::ControllerHandler* pController;
 
-        const unsigned int MAX = 12;
-        Structure::Pair **headers;
-        unsigned int headerIndex;
+        Template::Map<Structure::String, Structure::String> headers;
         char bufferContent[1000];
 
         bool parsePath(const char *line);
@@ -49,8 +50,6 @@ namespace Network {
 
         virtual void prepare(char* lines) = 0;
         virtual void process() = 0;
-
-        const char *operator[](const char *indexKey);
 
     };
 

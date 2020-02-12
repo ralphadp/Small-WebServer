@@ -32,7 +32,7 @@ namespace Controller {
     protected:
         void addPOST(const char* path, Model::ModelHandler* handler);
         void addGET(const char* path, Model::ModelHandler* handler);
-        Model::ModelHandler* fetchModel(Network::RequestBag requestBag);
+        Model::ModelHandler* fetchModel(Network::RequestBag& requestBag);
         const ControllerMap& getController(const char* verb);
     public:
         explicit ControllerHandler();
@@ -40,7 +40,6 @@ namespace Controller {
 
         Model::Result deliverProcessing(Network::RequestBag requestBag);
         void configure();
-
 
     };
 

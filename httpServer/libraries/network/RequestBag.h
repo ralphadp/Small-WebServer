@@ -7,8 +7,8 @@
 
 #include <string.h>
 
-
-#include "../structure/Map.h"
+#include "../structure/String.h"
+#include "../structure/template/Map.h"
 
 namespace Network {
 
@@ -18,8 +18,8 @@ namespace Network {
         char m_version[16];
         char *m_message;
         unsigned int contentMessageLength;
-        Structure::Map m_restParameters;
-        Structure::Map m_queryParameters;
+        Template::Map<Structure::String, Structure::String> m_restParameters;
+        Template::Map<Structure::String, Structure::String> m_queryParameters;
     public:
 
         RequestBag();
@@ -35,11 +35,11 @@ namespace Network {
         unsigned int getContentLength() const;
         const char* getUrlPath() const;
         const char* getVersion() const;
-        Structure::Map& getRestParameters();
-        void copyRestParams(const Structure::Map& restParameters);
+        Template::Map<Structure::String, Structure::String>& getRestParameters();
+        void copyRestParams(const Template::Map<Structure::String, Structure::String>& restParameters);
         /*TODO: Query parameters should be defined and implemented in a inherited class*/
-        Structure::Map& getQueryParameters();
-        void copyQueryParams(const Structure::Map& restParameters);
+        Template::Map<Structure::String, Structure::String>& getQueryParameters();
+        void copyQueryParams(const Template::Map<Structure::String, Structure::String>& restParameters);
 
         bool hasQuery();
         char* removeQueryFromUrl();

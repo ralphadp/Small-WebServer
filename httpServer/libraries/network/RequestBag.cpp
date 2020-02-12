@@ -68,19 +68,19 @@ namespace Network {
         return m_version;
     }
 
-    void RequestBag::copyRestParams(const Structure::Map& restParameters) {
+    void RequestBag::copyRestParams(const Template::Map<Structure::String, Structure::String>& restParameters) {
         m_restParameters = restParameters;
     }
 
-    Structure::Map& RequestBag::getRestParameters() {
+    Template::Map<Structure::String, Structure::String>& RequestBag::getRestParameters() {
         return m_restParameters;
     }
 
-    void RequestBag::copyQueryParams(const Structure::Map& restParameters) {
+    void RequestBag::copyQueryParams(const Template::Map<Structure::String, Structure::String>& restParameters) {
         m_queryParameters = restParameters;
     }
 
-    Structure::Map& RequestBag::getQueryParameters() {
+    Template::Map<Structure::String, Structure::String>& RequestBag::getQueryParameters() {
         return m_queryParameters;
     }
 

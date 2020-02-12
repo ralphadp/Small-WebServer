@@ -14,7 +14,6 @@ Configuration::Configuration() {
 	directory = new Directory("./config/");
 	assembler = new FileAssembler(directory, filename);
 	m_configFile = new File(assembler);
-    configMap = new Structure::Pair*[MAX];
 }
 
 Configuration::Configuration(File* configFile) {
@@ -22,7 +21,6 @@ Configuration::Configuration(File* configFile) {
 	directory = NULL;
 	assembler = NULL;
 	m_configFile = configFile;
-    configMap = new Structure::Pair*[MAX];
 }
 
 Configuration::~Configuration() {
@@ -43,10 +41,6 @@ Configuration::~Configuration() {
 		delete m_configFile;
 	}
 
-    for(unsigned int index = 0; index < MAX; index++) {
-	    delete configMap[index];
-	}
-    delete configMap;
 }
 
 bool Configuration::read() {
@@ -61,7 +55,6 @@ bool Configuration::read() {
 
     char* ptrFile = new char[128];
     unsigned int size = m_configFile->size();
-    unsigned int index = 0;
 
     //Copy the line by line the contents referenced by FILE*
     while(fgets (ptrFile, size, reference)) {
@@ -74,18 +67,16 @@ bool Configuration::read() {
             continue;
         }
 
-        configMap[index] = new Structure::Pair;
-        configMap[index]->setKey(pch);
+        Structure::String key(pch);
         pch = strtok(NULL, "=");
         if (!pch) {
             result = false;
             continue;
         }
-        configMap[index]->setValue(pch);
-        index++;
+        configMap[key] = pch;
     }
 
-    configMap[index] = NULL;
+    //configMap[index] = NULL;
     m_configFile->close();
     delete [] ptrFile;
 
@@ -98,28 +89,28 @@ void Configuration::dropPrivileges() {
     struct passwd *pwd;
     struct group *grp;
 
-    if ((pwd = getpwnam(this->operator[]("USER"))) == 0)
+    if ((pwd = getpwnam(config("USER"))) == 0)
     {
-        Logger::getInstance()->error("User [%s] not found in /etc/passwd", this->operator[]("USER"));
+        Logger::getInstance()->error("User [%s] not found in /etc/passwd", config("USER"));
     	exit(1);
     }
 
-    if ((grp = getgrnam(this->operator[]("GROUP"))) == 0)
+    if ((grp = getgrnam(config("GROUP"))) == 0)
     {
-        Logger::getInstance()->error("Group [%s] not found in /etc/group", this->operator[]("GROUP"));
+        Logger::getInstance()->error("Group [%s] not found in /etc/group", config("GROUP"));
     	exit(1);
     }
 
-    if (chdir(this->operator[]("ROOT")) != 0)
+    if (chdir(config("ROOT")) != 0)
     {
-        Logger::getInstance()->error("Using chdir() in [%s] failed, %s", this->operator[]("ROOT"), strerror(errno));
+        Logger::getInstance()->error("Using chdir() in [%s] failed, %s", config("ROOT"), strerror(errno));
         Logger::getInstance()->info("The dir path must exist ");
     	exit(1);
     }
 
-    if (chroot(this->operator[]("ROOT")) != 0)
+    if (chroot(config("ROOT")) != 0)
     {
-        Logger::getInstance()->error("Failed chroot() in [%s] , %s", this->operator[]("ROOT"), strerror(errno));
+        Logger::getInstance()->error("Failed chroot() in [%s] , %s", config("ROOT"), strerror(errno));
         Logger::getInstance()->info("The app shoudl run as root.");
     	exit(1);
     }
@@ -138,27 +129,11 @@ void Configuration::dropPrivileges() {
 }
 
 int Configuration::getPort() {
-	return atoi(this->operator[]("PORT"));
+	return atoi(config("PORT"));
 }
 
-const char* Configuration::operator[](const char* indexKey)
-{
-    if (!indexKey || strlen(indexKey) == 0)
-    {
-        Logger::getInstance()->error("key is null");
-
-        return "";
-    }
-
-    Structure::Pair** iterator = configMap;
-    while(*iterator != NULL) {
-        if ((*iterator)->hasKey(indexKey)) {
-            return (*iterator)->getValue();
-        }
-        iterator++;
-    }
-
-    return "Unknown";
+const char* Configuration::config(const char* key) {
+    return configMap[key].value();
 }
 
 }

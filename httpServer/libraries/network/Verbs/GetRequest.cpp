@@ -16,7 +16,7 @@ namespace Network {
                 Configuration *config,
                 Controller::ControllerHandler *controller
         ) : Request(file, config, controller) {
-            result = NULL;
+            resultPath = NULL;
 
             hostnamef = NULL;
             ext = NULL;
@@ -53,12 +53,10 @@ namespace Network {
 
                 while(token) {
 
-                    Structure::Pair* pair = new Structure::Pair();
-                    pair->setKey(token);
+                    Structure::String key(token);
                     token = strtok(NULL, "=");
                     if (token) {
-                        pair->setValue(token);
-                        m_query.add(pair);
+                        m_query[key] = token;
                     }
                     token = strtok(NULL, "=");
                 }
@@ -98,9 +96,9 @@ namespace Network {
                         if(parseQuery(m_bag.getUrlPath())) {
                             m_bag.copyQueryParams(m_query);
                         }
-                        result = m_bag.removeQueryFromUrl();
+                        resultPath = m_bag.removeQueryFromUrl();
                     } else {
-                        result = const_cast<char*>(m_bag.getUrlPath());
+                        resultPath = const_cast<char*>(m_bag.getUrlPath());
                     }
 
                 } else {
@@ -110,18 +108,18 @@ namespace Network {
                 postLine = strtok(postLine + strlen(postLine) + 1, "\n\r");
             }
 
-            hostnamef = const_cast<char*>(this->operator[]("Host:"));
+            hostnamef = const_cast<char*>(headers["Host:"].value());
 
-            if (this->operator[]("Range:")) {
-                rangetmp= const_cast<char*>(this->operator[]("Range:"));
+            if (headers.exist("Range:")) {
+                rangetmp= const_cast<char*>(headers["Range:"].value());
                 strcpy(code, "206 Partial Content");
 
                 rangetmp = strtok(strpbrk(rangetmp, "="), "=-");
                 range = atoi(rangetmp);
             }
 
-            strcpy(file, result);
-            Directory dir(result);
+            strcpy(file, resultPath);
+            Directory dir(resultPath);
 
             if (dir.exists()) {
                 if (file[strlen(file) - 1] == '/') {
@@ -140,12 +138,12 @@ namespace Network {
                     strcpy(code, "301 Moved Permanently");
                     strcpy(moved, "Location: http://");
                     strcat(moved, hostnamef);
-                    strcat(moved, result);
+                    strcat(moved, resultPath);
                     strcat(moved, "/");
                 }
             } else {
                 //get file descriptor for founded file
-                if (pfile->open(result, FileAction::Type::READ)) {
+                if (pfile->open(resultPath, FileAction::Type::READ)) {
                     strcpy(code, "200 OK");
                 } else {
                     setNotFound();
@@ -169,7 +167,7 @@ namespace Network {
                     strcat(sent, "\nConnection: close\nContent-Type: ");
                     strcat(sent, "application/json");
                     strcat(sent, ";charset=");
-                    strcat(sent, (*pConfig)["CHARSET"]);
+                    strcat(sent, pConfig->config("CHARSET"));
                     strcat(sent, "\n\n");
                     printf("%s", sent);
                     pfile->write(sent);
@@ -256,7 +254,7 @@ namespace Network {
             strcat(sent, "\nConnection: close\nContent-Type: ");
             strcat(sent, mime);
             strcat(sent, "; charset=");
-            strcat(sent, (*pConfig)["CHARSET"]);
+            strcat(sent, pConfig->config("CHARSET"));
             strcat(sent, "\n\n");
 
             Logger::getInstance()->info("RESPONSE:\n%s", sent);

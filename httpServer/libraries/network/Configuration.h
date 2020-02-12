@@ -20,15 +20,14 @@
 #include "../Filename.h"
 #include "../Directory.h"
 #include "../file.h"
-#include "../structure/Pair.h"
+#include "../structure/String.h"
+#include "../structure/template/Map.h"
 
 namespace Network {
 
 class Configuration {
 
-	const unsigned int MAX = 6;
-
-    Structure::Pair** configMap;
+    Template::Map<Structure::String, Structure::String> configMap;
 
 	File* m_configFile;
 
@@ -43,7 +42,7 @@ public:
 	bool read();
 	void dropPrivileges();
 	int getPort();
-    const char* operator[] (const char* indexKey);
+    const char* config(const char* key);
 };
 
 }

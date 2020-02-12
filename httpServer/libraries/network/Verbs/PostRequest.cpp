@@ -37,9 +37,9 @@ namespace Network {
                 return false;
             }
 
-            const char *contentType = this->operator[]("content-type:");
+            const char *contentType = headers["content-type:"].value();
             if (!m_bag.getContentLength()) {
-                m_bag.setMessageLength(atoi(this->operator[]("Content-Length:")));
+                m_bag.setMessageLength(atoi(headers["Content-Length:"].value()));
             }
 
             if (strcmp(contentType, "application/json") == 0
@@ -124,7 +124,7 @@ namespace Network {
             strcat(sent, "\nConnection: close\nContent-Type: ");
             strcat(sent, "application/json");
             strcat(sent, ";charset=");
-            strcat(sent, (*pConfig)["CHARSET"]);
+            strcat(sent, pConfig->config("CHARSET"));
             strcat(sent, "\n\n");
             printf("%s", sent);
             pfile->write(sent);

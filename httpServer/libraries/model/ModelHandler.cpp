@@ -37,17 +37,18 @@ namespace Model {
     }
 
     Result ModelHandler::process(Network::RequestBag parameters) {
-
         const char* templateContent = fetchTemplate();
 
-        if (templateContent) {
-            if (Model::verifyToken(parameters.getContents())) {
-                return this->m_pAction(parameters, templateContent);
-            }
+        if (!templateContent) {
 
-            return Result(Model::getInvalidTokenTemplate(), false);
+            return Result(Model::getErrorTemplate(), false);
         }
 
-        return Result(Model::getErrorTemplate(), false);
+        if (Model::verifyToken(parameters.getContents())) {
+
+            return this->m_pAction(parameters, templateContent);
+        }
+
+        return Result(Model::getInvalidTokenTemplate(), false);
     }
 }
