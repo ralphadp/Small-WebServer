@@ -6,121 +6,69 @@
 
 namespace Network {
 
-    void Rest::parseParameters(const char* parameters) {
+    const char* Rest::parseParams(const char* verb) {
 
-        if (!parameters) {
-            return;
-        }
+        const char* restUrl = 0;
+        Template::List<Structure::Url>& urlList = urls[verb];
+        bool onTrack = false;
 
-        char QUERY[1024];
-        strcpy(QUERY, parameters);
+        for (unsigned int index = 0; index < urlList.getLength(); index++) {
 
-        char* pParameter = strtok(QUERY, "&");
-        while(pParameter) {
+            const Template::List<Structure::String>& list = urlList[index].parts();
+            const Template::List<Structure::String>& input = m_currentUrl.parts();
 
-            char PARAM[512];
-            strcpy(PARAM, pParameter);
-            char* token = strtok(PARAM, "=");
-            while(token) {
-                Structure::String key(token);
-                token = strtok(NULL, "=");
-                if (token) {
-                    m_parameters[key] = token;
-                }
-            }
-
-            pParameter = strtok(NULL, "&");
-        }
-    }
-
-    Controller::ControllerPair* Rest::processParams(Controller::ControllerPair** controllerMap)
-    {
-        if (!m_urlParts.size()) {
-            Logger::getInstance()->error("Url part list is empty.");
-
-            return NULL;
-        }
-
-        Controller::ControllerPair** iterator = controllerMap;
-
-        while(*iterator != NULL) {
-
-            if ((*iterator)->getMaxLengthParts() != m_urlParts.size()) {
-                iterator++;
+            if (input.getLength() != list.getLength()) {
                 continue;
             }
 
-            unsigned int index = 0;
-            UrlParts part = (*iterator)->getPathParts();
+            onTrack = false;
 
-            //The first part of th Rest cannot be variable
-            if (strcmp(part[index], m_urlParts[index]) == 0) {
+            for (unsigned int part = 0; part < input.getLength(); part++) {
 
-                index++;
-                bool onTrack = true;
-                char* parametersTape = new char[512];
-                strcpy(parametersTape, "");
-
-                while (index < m_urlParts.size() && onTrack) {
-
-                    if (strcmp(part[index], m_urlParts[index]) != 0) {
-                        onTrack = false;
-
-                        if (part[index][0] == ':') {
-                            //Is a variable for Rest parameters
-
-                            if (!strlen(parametersTape)) {
-                                sprintf(parametersTape, "%s=%s", &part[index][1], m_urlParts[index]);
-                            } else {
-                                sprintf(parametersTape, "%s&%s=%s", parametersTape, &part[index][1], m_urlParts[index]);
-                            }
-                            onTrack = true;
-                        }
-                    } else {
+                if (input[part] == list[part]) {
+                    onTrack = true;
+                } else {
+                    if (list[part].value()[0] == ':') {
                         onTrack = true;
+                        restUrl = urlList[index].value();
+                        m_parameters[list[part]] = input[part];
+                    } else {
+                        onTrack = false;
                     }
-
-                    index++;
                 }
-
-                if (onTrack) {
-                    Logger::getInstance()->info("Rest variables tape: '%s'", parametersTape);
-
-                    parseParameters(parametersTape);
-                    delete [] parametersTape;
-
-                    return *iterator;
-                }
-
-                delete [] parametersTape;
             }
 
-            iterator++;
+            if (onTrack) {
+                break;
+            }
         }
 
-        return NULL;
+        if (!onTrack) {
+            m_parameters.clear();
+        }
+
+        return restUrl;
     }
 
-    Controller::ControllerPair* Rest::process(const char* urlPath, Controller::ControllerPair** controllerMap) {
-
-        if (!urlPath) {
-            Logger::getInstance()->warning("No input url path to parse.");
-
-            return NULL;
+    const char* Rest::process(RequestBag& parameters) {
+        m_currentUrl = parameters.getUrlPath();
+        const char* restUrl = parseParams(parameters.getVerb());
+        if (restUrl) {
+            parameters.copyRestParams(m_parameters);
         }
 
-        if (!controllerMap) {
-            Logger::getInstance()->warning("No controller map provided.");
-
-            return NULL;
-        }
-
-        m_urlParts.storeUrlParts(urlPath);
-
-        return processParams(controllerMap);
+        return restUrl;
     }
 
     Template::Map<Structure::String, Structure::String>& Rest::getParameters() {
         return m_parameters;
+    }
+
+    void Rest::addGetUrl(const char* path) {
+        urls["GET"].add(path);
+    }
+
+    void Rest::addPostUrl(const char* path) {
+        urls["POST"].add(path);
     }
 }

@@ -65,15 +65,16 @@ namespace Template {
 
         ~Map();
 
-        V const operator[](const K &key) const;
+        V const operator[](const K& key) const;
 
-        V &operator[](const K &key);
+        V &operator[](const K& key);
 
         void clear();
 
         unsigned int length();
 
-        bool exist(const K &key);
+        bool exist(const K &key) const;
+
     };
 
 
@@ -83,8 +84,8 @@ namespace Template {
             m_capacity(100),
             m_length(0) {
         m_value = new Chain *[m_capacity];
-        for (int i = 0; i < m_capacity; i++) {
-            m_value[i] = 0;
+        for (int index = 0; index < m_capacity; index++) {
+            m_value[index] = 0;
         }
     }
 
@@ -104,16 +105,16 @@ namespace Template {
     template<class K, class V>
     V const Map<K, V>::operator[](const K &key) const {
         int index = hash(key);
+
         return *m_value[index]->find(key);
     }
 
     template<class K, class V>
     V &Map<K, V>::operator[](const K &key) {
-        int index = 0;
-
-        index = hash(key);
+        int index = hash(key);
 
         if (!m_value[index]) {
+
             Pair pair(key);
             m_value[index] = new Chain(pair);
 
@@ -121,6 +122,7 @@ namespace Template {
             m_length++;
             return *value;
         } else {
+
             V* value = m_value[index]->find(key);
             if (!value) {
                 Pair pair(key);
@@ -134,10 +136,10 @@ namespace Template {
 
     template<class K, class V>
     void Map<K, V>::clear() {
-        for (int i = 0; i < m_capacity; i++) {
-            if (m_value[i]) {
-                delete m_value[i];
-                m_value[i] = 0;
+        for (int index = 0; index < m_capacity; index++) {
+            if (m_value[index]) {
+                delete m_value[index];
+                m_value[index] = 0;
             }
         }
     }
@@ -148,7 +150,7 @@ namespace Template {
     }
 
     template<class K, class V>
-    bool Map<K, V>::exist(const K &key) {
+    bool Map<K, V>::exist(const K &key) const {
         int index = hash(key);
 
         if (!m_value[index]) {

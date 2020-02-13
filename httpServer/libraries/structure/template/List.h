@@ -5,6 +5,7 @@
 #ifndef STRUCTURE_TEMPLATE_LIST_H
 #define STRUCTURE_TEMPLATE_LIST_H
 
+#include <iostream>
 #include "../String.h"
 
 namespace Template {
@@ -24,9 +25,11 @@ namespace Template {
 
         T operator[](unsigned int index);
 
+        T operator[](unsigned int index) const;
+
         void clear();
 
-        unsigned int getLength();
+        unsigned int getLength() const;
     };
 
     template<class T>
@@ -97,9 +100,24 @@ namespace Template {
     }
 
     template<class T>
+    T List<T>::operator[](unsigned int index) const {
+        if (index >= 0 && index < m_INDEX) {
+
+            return *m_ptr[index];
+        }
+
+        try {
+            return T();
+        }
+        catch (T exception) {
+            return 0;
+        }
+    }
+
+    template<class T>
     void List<T>::clear() {
         for (int index = 0; index < m_INDEX; index++) {
-            delete m_ptr[index];
+            delete [] m_ptr[index];
         }
 
         delete [] m_ptr;
@@ -108,7 +126,7 @@ namespace Template {
     }
 
     template<class T>
-    unsigned int List<T>::getLength() {
+    unsigned int List<T>::getLength() const {
         return m_INDEX;
     }
 }

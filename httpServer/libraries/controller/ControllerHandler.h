@@ -7,7 +7,6 @@
 
 
 #include "../Logger.h"
-#include "ControllerPair.h"
 #include "../model/ModelHandler.h"
 #include "../model/Result.h"
 
@@ -18,25 +17,27 @@
 
 #include "../network/RequestBag.h"
 #include "../network/Rest.h"
-#include "ControllerMap.h"
+#include "../structure/String.h"
+#include "../structure/template/Map.h"
 
 namespace Controller {
 
     class ControllerHandler {
 
-        ControllerMap m_post;
-        ControllerMap m_get;
-        ControllerMap m_unknown;
+        Template::Map<Structure::String, Model::ModelHandler*> m_post;
+        Template::Map<Structure::String, Model::ModelHandler*> m_get;
+        Template::Map<Structure::String, Model::ModelHandler*> m_unknown;
 
         Network::Rest m_rest;
     protected:
-        void addPOST(const char* path, Model::ModelHandler* handler);
-        void addGET(const char* path, Model::ModelHandler* handler);
         Model::ModelHandler* fetchModel(Network::RequestBag& requestBag);
-        const ControllerMap& getController(const char* verb);
+        const Template::Map<Structure::String, Model::ModelHandler*>& getController(const char* verb);
     public:
         explicit ControllerHandler();
         virtual ~ControllerHandler();
+
+        void POST(const char* path, Model::ModelHandler* handler);
+        void GET(const char* path, Model::ModelHandler* handler);
 
         Model::Result deliverProcessing(Network::RequestBag requestBag);
         void configure();

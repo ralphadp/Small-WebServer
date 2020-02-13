@@ -18,30 +18,25 @@ namespace Controller {
     Model::ModelHandler* ControllerHandler::fetchModel(Network::RequestBag& requestBag) {
 
         const char* URL_PATH = requestBag.getUrlPath();
+        const Template::Map<Structure::String, Model::ModelHandler*>& controller = getController(requestBag.getVerb());
 
-        const ControllerMap& controller = getController(requestBag.getVerb());
-
-        Model::ModelHandler* model = controller[URL_PATH];
-
-        if (!model) {
-
-            Controller::ControllerPair* restController = m_rest.process(URL_PATH, controller.getPair());
-
-            if (restController) {
-                model = restController->getValue();
-                if (model) {
-                    requestBag.copyRestParams(m_rest.getParameters());
-                } else {
-                    Logger::getInstance()->error("The Model attached to %s is empty.", URL_PATH);
-
-                    return NULL;
-                }
-            } else {
-                model = m_post["not-found"];
-            }
+        if (controller.exist(URL_PATH)) {
+            return controller[URL_PATH];
         }
 
-        return model;
+        const char* REST_URL_PATH = m_rest.process(requestBag);
+
+        if (!REST_URL_PATH) {
+            return m_post["not-found"];
+        }
+
+        if (controller.exist(REST_URL_PATH)) {
+            return controller[REST_URL_PATH];
+        }
+
+        Logger::getInstance()->error("The Model attached to %s is empty.", REST_URL_PATH);
+
+        return NULL;
     }
 
     Model::Result ControllerHandler::deliverProcessing(Network::RequestBag requestBag) {
@@ -60,34 +55,35 @@ namespace Controller {
         return model->process(requestBag);
     }
 
-    void  ControllerHandler::configure() {
-        addPOST("/login", new Model::ModelHandler(
+    void ControllerHandler::configure() {
+        POST("/login", new Model::ModelHandler(
                 Model::Item::User::login, "login_response.json"
         ));
-        addPOST("/schedule", new Model::ModelHandler(
+        POST("/schedule", new Model::ModelHandler(
                 Model::Item::Scheduler::getList, "scheduler-list.json"
         ));
-        addPOST("/schedule/:datetime", new Model::ModelHandler(
+        POST("/schedule/:datetime", new Model::ModelHandler(
                 Model::Item::Scheduler::getInfo, "scheduler-info.json"
         ));
-        addPOST("not-found", new Model::ModelHandler(
+        POST("not-found", new Model::ModelHandler(
                 Model::Item::Server::notFound, "not-found.json"
         ));
-        addGET("/config", new Model::ModelHandler(
+        GET("/config", new Model::ModelHandler(
                 Model::Item::Config::init, "init_response.json"
         ));
-
     }
 
-    void ControllerHandler::addPOST(const char* path, Model::ModelHandler* handler) {
-        m_post.add(new ControllerPair(path, handler));
+    void ControllerHandler::POST(const char* path, Model::ModelHandler* handler) {
+        m_rest.addPostUrl(path);
+        m_post[path] = handler;
     }
 
-    void ControllerHandler::addGET(const char* path, Model::ModelHandler* handler) {
-        m_get.add(new ControllerPair(path, handler));
+    void ControllerHandler::GET(const char* path, Model::ModelHandler* handler) {
+        m_rest.addGetUrl(path);
+        m_get[path] = handler;
     }
 
-    const ControllerMap& ControllerHandler::getController(const char* verb) {
+    const Template::Map<Structure::String, Model::ModelHandler*>& ControllerHandler::getController(const char* verb) {
         if (!verb) {
             return m_unknown;
         }

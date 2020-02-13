@@ -8,25 +8,25 @@
 #include <string.h>
 
 #include "../Logger.h"
-#include "../controller/ControllerPair.h"
-
-#include "UrlParts.h"
-#include "../structure/String.h"
+#include "../network/RequestBag.h"
+#include "../structure/Url.h"
 #include "../structure/template/Map.h"
 
 namespace Network {
 
     class Rest {
-        UrlParts m_urlParts;
-    protected:
+        Structure::Url m_currentUrl;
         Template::Map<Structure::String, Structure::String> m_parameters;
+        Template::Map<Structure::String, Template::List<Structure::Url>> urls;
 
-        void parseParameters(const char* parameters);
-        Controller::ControllerPair* processParams(Controller::ControllerPair** controllerMap);
     public:
-
-        Controller::ControllerPair* process(const char* urlPath, Controller::ControllerPair** controllerMap);
+        const char* process(RequestBag& parameters);
         Template::Map<Structure::String, Structure::String>& getParameters();
+
+        void addGetUrl(const char* path);
+        void addPostUrl(const char* path);
+
+        const char* parseParams(const char* verb);
     };
 }
 

@@ -28,6 +28,7 @@ RUN g++ -std=c++11 -Wall -o server main.cpp \
 ./libraries/controller/ControllerMap.cpp \
 ./libraries/controller/ControllerPair.cpp \
 ./libraries/structure/String.cpp \
+./libraries/structure/Url.cpp \
 ./libraries/structure/Pair.cpp \
 ./libraries/structure/Map.cpp \
 ./libraries/structure/StringList.cpp \

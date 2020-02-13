@@ -15,6 +15,8 @@ namespace Structure {
  * Design pattern for data, following the rule of the three.
  */
     class String {
+
+    protected:
         char *m_value;
 
         inline void assign(const char *);

@@ -34,6 +34,7 @@ ControllerHandler.o \
 ControllerMap.o \
 ControllerPair.o \
 String.o \
+Url.o \
 Pair.o \
 Map.o \
 StringList.o \
