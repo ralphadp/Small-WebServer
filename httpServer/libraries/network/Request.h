@@ -13,6 +13,7 @@
 #include "../file.h"
 #include "../Logger.h"
 #include "Configuration.h"
+#include "../Util.h"
 #include "../controller/ControllerHandler.h"
 
 #include "RequestBag.h"
@@ -27,7 +28,7 @@ namespace Network {
     protected:
         RequestBag m_bag;
         char length[100];
-        char sent[500]/*TODO: change to dynamically*/;
+        char sent[512]/*TODO: change to dynamically*/;
 
         char *lines;
         char *postLine;

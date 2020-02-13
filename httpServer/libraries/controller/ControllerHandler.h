@@ -39,7 +39,7 @@ namespace Controller {
         void POST(const char* path, Model::ModelHandler* handler);
         void GET(const char* path, Model::ModelHandler* handler);
 
-        Model::Result deliverProcessing(Network::RequestBag requestBag);
+        Model::Result deliverProcessing(Network::RequestBag& requestBag);
         void configure();
 
     };

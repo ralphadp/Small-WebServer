@@ -39,7 +39,7 @@ namespace Controller {
         return NULL;
     }
 
-    Model::Result ControllerHandler::deliverProcessing(Network::RequestBag requestBag) {
+    Model::Result ControllerHandler::deliverProcessing(Network::RequestBag& requestBag) {
 
         if (!requestBag.getUrlPath()) {
             Logger::getInstance()->error("The path is empty, cannot be processed in the Model");

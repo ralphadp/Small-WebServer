@@ -156,7 +156,7 @@ namespace Network {
             if (strcmp(code, "404 Not Found") == 0) {
                 Model::Result result = pController->deliverProcessing(m_bag);
 
-                if (result.isSucess()) {
+                if (result.isSuccess()) {
                     sprintf(length, "%ld", (long) result.getLength());
 
                     //create response header

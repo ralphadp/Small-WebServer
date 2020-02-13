@@ -31,7 +31,7 @@ char* Util::clone(const char* stringValue) {
     }
 
     unsigned int length = strlen(stringValue);
-    char* clone = new char[length + 1];
+    char* clone = new char[length + 1]();
     strcpy(clone, stringValue);
     clone[length] = 0;
 

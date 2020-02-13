@@ -9,7 +9,7 @@ namespace Model {
 
     namespace Item {
 
-        Result Config::init(Network::RequestBag params, const char* templateContent) {
+        Result Config::init(Network::RequestBag& params, const char* templateContent) {
             Logger::getInstance()->info("::%s request Rest params: %d", __func__, params.getRestParameters().length());
             Logger::getInstance()->info("::%s request Query params: %d", __func__, params.getQueryParameters().length());
 

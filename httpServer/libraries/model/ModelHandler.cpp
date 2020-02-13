@@ -6,7 +6,7 @@
 
 namespace Model {
 
-    ModelHandler::ModelHandler(Result (*pActionFunction)(Network::RequestBag, const char*), const char *templateFilename) {
+    ModelHandler::ModelHandler(Result (*pActionFunction)(Network::RequestBag&, const char*), const char *templateFilename) {
         m_pAction = pActionFunction;
 
         char* complete = new char[strlen(Global::TEMPLATE_JSON_DIRECTORY) + strlen(templateFilename) + 1];
@@ -36,7 +36,7 @@ namespace Model {
         return m_templateFile->getBuffer();
     }
 
-    Result ModelHandler::process(Network::RequestBag parameters) {
+    Result ModelHandler::process(Network::RequestBag& parameters) {
         const char* templateContent = fetchTemplate();
 
         if (!templateContent) {

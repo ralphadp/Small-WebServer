@@ -196,11 +196,16 @@ unsigned int File::read(unsigned int size) {
         return 0;
     }
 
-    this->buffer = new char[size];
+    this->buffer = new char[size + 1];
 
     unsigned int countRead = fread (this->buffer, sizeof(char), size, m_file_reference);
 
-    this->buffer[countRead] = '\0';
+    if (size != countRead) {
+        Logger::getInstance()->warning("File size is %d but bytes read are %d", size, countRead);
+    }
+
+    this->buffer[size] = '\0';
+
     readBytesCount = countRead;
 
     return countRead;

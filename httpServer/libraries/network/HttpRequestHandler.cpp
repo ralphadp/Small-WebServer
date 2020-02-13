@@ -149,6 +149,22 @@ void HttpRequestHandler::clean() {
 		delete request;
 		request = NULL;
 	}
+
+    delete [] m_message;
+}
+
+bool HttpRequestHandler::readRemoteMessage() {
+    m_message = new char[MESSAGE_LENGTH + 1]();
+
+    if (!pfile->read(m_message, MESSAGE_LENGTH)) {
+        Logger::getInstance()->error("Receive remote message with error");
+
+        return false;
+    }
+
+    m_message[MESSAGE_LENGTH] = 0;
+
+    return true;
 }
 
 void HttpRequestHandler::listen() {
@@ -166,18 +182,16 @@ void HttpRequestHandler::listen() {
 			/*child process*/
 			close(sockfd); //close the sockfd Copy
 
-			if (!pfile->read(message, 3000)) {
-				Logger::getInstance()->error("receive error");
-			} else {
-				request = buildRequest(message);
+			if (readRemoteMessage()) {
+				request = buildRequest(m_message);
 				if (!request) {
 					exit(0);
 				}
 
-				request->prepare(message);
+				request->prepare(m_message);
 				request->process();
-				clean();
 			}
+            clean();
 			exit(0);
 		} /*child process end*/
 		close(new_fd); //close the new_fd

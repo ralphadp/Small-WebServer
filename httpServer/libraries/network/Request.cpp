@@ -35,9 +35,7 @@ namespace Network {
             return false;
         }
 
-        char headerLine[strlen(line)];
-        strcpy(headerLine, line);
-
+        char* headerLine = Util::clone(line);
         char *pToken = strtok(headerLine, " ");
 
         if (!pToken) {
@@ -53,9 +51,11 @@ namespace Network {
             pToken = strtok(NULL, " ");
             m_bag.setVersion(pToken);
 
+            delete [] headerLine;
             return true;
         }
 
+        delete [] headerLine;
         return false;
     }
 
@@ -65,9 +65,7 @@ namespace Network {
             return false;
         }
 
-        char headerLine[strlen(line)];
-        strcpy(headerLine, line);
-
+        char* headerLine = Util::clone(line);
         char *pToken = strtok(headerLine, " ");
 
         if (!pToken) {
@@ -82,9 +80,11 @@ namespace Network {
                 headers[key] = pToken;
             }
 
+            delete [] headerLine;
             return true;
         }
 
+        delete [] headerLine;
         return false;
     }
 

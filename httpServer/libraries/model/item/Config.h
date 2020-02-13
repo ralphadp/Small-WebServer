@@ -18,7 +18,7 @@ namespace Model {
 
         public:
 
-            static Result init(Network::RequestBag params, const char *templateContent);
+            static Result init(Network::RequestBag& params, const char *templateContent);
         };
     }
 }

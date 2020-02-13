@@ -15,6 +15,10 @@ namespace Structure {
         split();
     }
 
+    Url::~Url() {
+        m_parts.clear();
+    }
+
     void Url::split() {
 
         if (!m_value) {
@@ -32,7 +36,7 @@ namespace Structure {
         delete [] key;
     }
 
-    const Template::List<Structure::String>& Url::parts() {
+    const Template::List<const char*>& Url::parts() {
         return m_parts;
     }
 }

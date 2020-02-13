@@ -49,7 +49,8 @@ class HttpRequestHandler {
 
 	const int BACKLOG = 10;
 
-	char message[3000];
+	char* m_message;
+	size_t MESSAGE_LENGTH = 3000;
 
 	Configuration* config;
 	FilesHandler* fileHandler;
@@ -64,6 +65,7 @@ public:
 	void bind();
 	void listen();
 private:
+    bool readRemoteMessage();
 	bool isGet(const char* type);
 	bool isPost(const char* type);
 	bool isPut(const char* type);

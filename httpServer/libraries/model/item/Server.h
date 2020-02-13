@@ -18,7 +18,7 @@ namespace Model {
 
         public:
 
-            static Result notFound(Network::RequestBag params, const char *templateContent);
+            static Result notFound(Network::RequestBag& params, const char *templateContent);
         };
     }
 }

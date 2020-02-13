@@ -9,13 +9,13 @@ namespace Network {
     const char* Rest::parseParams(const char* verb) {
 
         const char* restUrl = 0;
-        Template::List<Structure::Url>& urlList = urls[verb];
+        Template::List<Structure::Url>& urlList = m_urls[verb];
         bool onTrack = false;
 
         for (unsigned int index = 0; index < urlList.getLength(); index++) {
 
-            const Template::List<Structure::String>& list = urlList[index].parts();
-            const Template::List<Structure::String>& input = m_currentUrl.parts();
+            const Template::List<const char*>& list = urlList[index].parts();
+            const Template::List<const char*>& input = m_currentUrl.parts();
 
             if (input.getLength() != list.getLength()) {
                 continue;
@@ -25,10 +25,10 @@ namespace Network {
 
             for (unsigned int part = 0; part < input.getLength(); part++) {
 
-                if (input[part] == list[part]) {
+                if (strcmp(input[part], list[part]) == 0) {
                     onTrack = true;
                 } else {
-                    if (list[part].value()[0] == ':') {
+                    if (list[part][0] == ':') {
                         onTrack = true;
                         restUrl = urlList[index].value();
                         m_parameters[list[part]] = input[part];
@@ -65,10 +65,10 @@ namespace Network {
     }
 
     void Rest::addGetUrl(const char* path) {
-        urls["GET"].add(path);
+        m_urls["GET"].add(path);
     }
 
     void Rest::addPostUrl(const char* path) {
-        urls["POST"].add(path);
+        m_urls["POST"].add(path);
     }
 }

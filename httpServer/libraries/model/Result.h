@@ -7,19 +7,24 @@
 
 #include <string.h>
 
+#include "../Util.h"
+
 namespace Model {
 
     class Result {
         unsigned int m_length;
-        const char* m_content;
+        char* m_content;
         bool m_success;
     public:
+        Result();
+        Result(const Result& result);
         Result(const char* payload, bool success);
         virtual ~Result();
 
         unsigned int getLength();
         const char* getPayload();
-        bool isSucess();
+        bool isSuccess();
+        Result& operator=(const Result& result);
     };
 }
 

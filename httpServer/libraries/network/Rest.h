@@ -17,7 +17,7 @@ namespace Network {
     class Rest {
         Structure::Url m_currentUrl;
         Template::Map<Structure::String, Structure::String> m_parameters;
-        Template::Map<Structure::String, Template::List<Structure::Url>> urls;
+        Template::Map<Structure::String, Template::List<Structure::Url>> m_urls;
 
     public:
         const char* process(RequestBag& parameters);

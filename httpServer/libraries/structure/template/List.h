@@ -117,7 +117,7 @@ namespace Template {
     template<class T>
     void List<T>::clear() {
         for (int index = 0; index < m_INDEX; index++) {
-            delete [] m_ptr[index];
+            delete m_ptr[index];
         }
 
         delete [] m_ptr;

@@ -18,8 +18,8 @@ namespace Model {
 
         public:
 
-            static Result getList(Network::RequestBag params, const char* templateContent);
-            static Result getInfo(Network::RequestBag params, const char* templateContent);
+            static Result getList(Network::RequestBag& params, const char* templateContent);
+            static Result getInfo(Network::RequestBag& params, const char* templateContent);
         };
     }
 

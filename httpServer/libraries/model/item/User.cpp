@@ -16,23 +16,24 @@ namespace Model {
             return true;
         }
 
-        Result User::login(Network::RequestBag params, const char* templateContent) {
+        Result User::login(Network::RequestBag& params, const char* templateContent) {
             Logger::getInstance()->info("::%s request rest params: %d", __func__, params.getRestParameters().length());
 
             bool passed = checkCredentials();
 
             if (passed) {
-                    char* payload;
                     char token[MAX_TOKEN_LENGTH + 1] = "";
                     const char* success = Util::boolToStr(passed);
                     unsigned int payloadLength = strlen(templateContent) + MAX_TOKEN_LENGTH + strlen(success);
-                    payload = new char[payloadLength + 1];
+                    char* payload = new char[payloadLength + 1];
 
                     Util::generateToken(token, MAX_TOKEN_LENGTH);
                     sprintf(payload, templateContent, token, success);
                     payload[payloadLength] = 0;
 
-                    return Result(payload, true);
+                    Result result(payload, true);
+                    delete [] payload;
+                    return result;
             }
 
             return Result(defaultBadCredentialsTemplate, false);

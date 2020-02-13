@@ -105,7 +105,7 @@ namespace Network {
 
         void PostRequest::process() {
 
-            Model::Result result(NULL, false);
+            Model::Result result;
 
             if (!m_bag.getContents()) {
                 Logger::getInstance()->error("The content is empty, cannot be processed in the Model");

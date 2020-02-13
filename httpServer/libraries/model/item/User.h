@@ -23,7 +23,7 @@ namespace Model {
             static bool checkCredentials();
         public:
 
-            static Result login(Network::RequestBag params, const char* templateContent);
+            static Result login(Network::RequestBag& params, const char* templateContent);
         };
     }
 

@@ -22,14 +22,14 @@ namespace Model {
 
         File* m_templateFile;
         const char* m_templateFilename;
-        Result (*m_pAction)(Network::RequestBag, const char*);
+        Result (*m_pAction)(Network::RequestBag&, const char*);
 
         const char *fetchTemplate();
     public:
-        explicit ModelHandler(Result (*fn)(Network::RequestBag, const char*), const char *templateFilename);
+        explicit ModelHandler(Result (*fn)(Network::RequestBag&, const char*), const char *templateFilename);
         virtual ~ModelHandler();
 
-        Result process(Network::RequestBag parameters);
+        Result process(Network::RequestBag& parameters);
     };
 
 }
