@@ -25,13 +25,8 @@ RUN g++ -std=c++11 -Wall -o server main.cpp \
 ./libraries/model/item/Server.cpp \
 ./libraries/model/item/User.cpp \
 ./libraries/controller/ControllerHandler.cpp \
-./libraries/controller/ControllerMap.cpp \
-./libraries/controller/ControllerPair.cpp \
 ./libraries/structure/String.cpp \
 ./libraries/structure/Url.cpp \
-./libraries/structure/Pair.cpp \
-./libraries/structure/Map.cpp \
-./libraries/structure/StringList.cpp \
 ./libraries/network/Configuration.cpp \
 ./libraries/network/Verbs/GetRequest.cpp \
 ./libraries/network/Verbs/PostRequest.cpp \
@@ -39,7 +34,6 @@ RUN g++ -std=c++11 -Wall -o server main.cpp \
 ./libraries/network/Request.cpp \
 ./libraries/network/RequestBag.cpp \
 ./libraries/network/Rest.cpp \
-./libraries/network/UrlParts.cpp \
 ./libraries/Directory.cpp \
 ./libraries/DisplayMessages.cpp \
 ./libraries/file.cpp \

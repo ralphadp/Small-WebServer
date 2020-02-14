@@ -31,21 +31,15 @@ Scheduler.o \
 Server.o \
 User.o \
 ControllerHandler.o \
-ControllerMap.o \
-ControllerPair.o \
 String.o \
 Url.o \
-Pair.o \
-Map.o \
-StringList.o \
 Configuration.o \
 GetRequest.o \
 PostRequest.o \
 HttpRequestHandler.o \
 Request.o \
 RequestBag.o \
-Rest.o \
-UrlParts.o
+Rest.o
 
 OBJ_FILES = $(addprefix $(OBJECTS_DIR)/, $(OBJS))
 
