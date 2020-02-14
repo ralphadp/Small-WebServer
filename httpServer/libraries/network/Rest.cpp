@@ -14,7 +14,8 @@ namespace Network {
 
         for (unsigned int index = 0; index < urlList.getLength(); index++) {
 
-            const Template::List<const char*>& list = urlList[index].parts();
+            Structure::Url urlItem = urlList[index];
+            const Template::List<const char*>& list = urlItem.parts();
             const Template::List<const char*>& input = m_currentUrl.parts();
 
             if (input.getLength() != list.getLength()) {
