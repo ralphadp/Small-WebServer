@@ -36,7 +36,7 @@ namespace Structure {
         delete [] key;
     }
 
-    const Template::List<const char*>& Url::parts() {
+    Template::List<const char*>& Url::parts() {
         return m_parts;
     }
 }

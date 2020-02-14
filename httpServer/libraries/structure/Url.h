@@ -19,7 +19,7 @@ namespace Structure {
         Url(const String&);
         ~Url();
         void split();
-        const Template::List<const char*>& parts();
+        Template::List<const char*>& parts();
 
     };
 }

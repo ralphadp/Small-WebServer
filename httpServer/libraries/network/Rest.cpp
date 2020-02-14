@@ -12,7 +12,8 @@ namespace Network {
         Template::List<Structure::Url>& urlList = m_urls[verb];
         bool onTrack = false;
 
-        for (unsigned int index = 0; index < urlList.getLength(); index++) {
+        unsigned int sizeList = urlList.getLength();
+        for (unsigned int index = 0; index < sizeList; index++) {
 
             Structure::Url urlItem = urlList[index];
             const Template::List<const char*>& list = urlItem.parts();
@@ -24,7 +25,8 @@ namespace Network {
 
             onTrack = false;
 
-            for (unsigned int part = 0; part < input.getLength(); part++) {
+            unsigned int size = input.getLength();
+            for (unsigned int part = 0; part < size; part++) {
 
                 if (strcmp(input[part], list[part]) == 0) {
                     onTrack = true;
