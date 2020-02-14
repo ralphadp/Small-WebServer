@@ -18,7 +18,10 @@ namespace Model {
             //TODO: call Db, fake response meanwhile
             sprintf(payload, templateContent, "#d3d3d3", "#6a6a6a", true, true);
 
-            return Result (payload, true);
+            Result result(payload, true);
+            delete [] payload;
+
+            return result;
         }
     }
 }

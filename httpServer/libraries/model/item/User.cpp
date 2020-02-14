@@ -33,6 +33,7 @@ namespace Model {
 
                     Result result(payload, true);
                     delete [] payload;
+
                     return result;
             }
 
