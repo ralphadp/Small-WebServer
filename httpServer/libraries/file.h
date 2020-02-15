@@ -60,16 +60,13 @@ public:
 	unsigned int read_chunk();
     unsigned int read(unsigned int size);
 	bool read(char* output_data, unsigned int size_data);
-	void readWriteChunck();
+	void readWriteChunk();
 	unsigned int readContents(char* output_data);
 	char* getBuffer();
     const char* GetContentLength();
 	void close();
 	void closeFD();
-	long int lastReadCount();
 
-private:
-	void readChunck();
 };
 
 #endif /* LIBRARIES__FILE_H */

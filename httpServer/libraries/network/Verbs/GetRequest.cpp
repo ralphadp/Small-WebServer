@@ -234,7 +234,7 @@ namespace Network {
             pfile->write(sent);
 
             //send file contents
-            pfile->readWriteChunck();
+            pfile->readWriteChunk();
 
             pfile->closeFD();//close the new_fd Copy
         }

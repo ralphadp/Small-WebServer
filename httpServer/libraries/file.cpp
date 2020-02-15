@@ -83,10 +83,10 @@ FILE* File::open(const char* completeFilename, FileAction type) {
 long File::size() {
 
 	fseek (m_file_reference, 0 , SEEK_END);
-	long filesize = ftell(m_file_reference);
+	long fileSize = ftell(m_file_reference);
 	rewind (m_file_reference);
 
-	return filesize;
+	return fileSize;
 }
 
 char* File::getStart() {
@@ -126,7 +126,7 @@ void File::prepareChunkReading(long range) {
 	sprintf(contentLength, "%ld", fileSize);
 
 	this->buffer_counter = 0;
-	this->buffer = (char*) malloc(sizeof(char) * SIZE);
+	this->buffer = new char[SIZE]();
 }
 
 char* File::getBuffer() {
@@ -222,10 +222,6 @@ bool File::read(char* output_data, unsigned int size_data) {
 	return readBytesCount != -1;
 }
 
-long int File::lastReadCount() {
-	return readBytesCount;
-}
-
 /**
  * Read until end of lines
  */
@@ -271,13 +267,7 @@ void File::closeFD() {
 	m_file_descriptor_reference = 0;
 }
 
-void File::readChunck() {
-	while (this->buffer_counter < buffer_chunks) {
-		read_chunk();
-	}
-}
-
-void File::readWriteChunck() {
+void File::readWriteChunk() {
 	while (this->buffer_counter < buffer_chunks) {
 		read_chunk();
 		writeBuffer();
