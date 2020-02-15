@@ -22,8 +22,8 @@ namespace Network {
         class GetRequest : public Request {
             char code[50];
             char file[200];
-            char moved[200];
-            char mime[100];
+            char moved[256];
+            char mime[128];
 
             char *resultPath;
 

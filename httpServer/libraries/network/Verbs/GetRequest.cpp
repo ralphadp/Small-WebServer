@@ -138,10 +138,7 @@ namespace Network {
                     }
                 } else {
                     strcpy(code, "301 Moved Permanently");
-                    strcpy(moved, "Location: http://");
-                    strcat(moved, hostnamef);
-                    strcat(moved, resultPath);
-                    strcat(moved, "/");
+                    sprintf(moved, "Location: http://%s%s/", hostnamef, resultPath);
                 }
             } else {
                 //get file descriptor for founded file
@@ -162,23 +159,21 @@ namespace Network {
                     sprintf(length, "%ld", (long) result.getLength());
 
                     //create response header
-                    strcpy(sent, "HTTP/1.1 200 OK");
-                    strcat(sent, "\nServer: httpd 0.3.1\n");
+                    strcpy(sent, "HTTP/1.1 200 OK\n");
+                    strcat(sent, "Server: httpd 0.3.1\n");
                     strcat(sent, "Content-Length: ");
                     strcat(sent, length);
-                    strcat(sent, "\nConnection: close\nContent-Type: ");
-                    strcat(sent, "application/json");
-                    strcat(sent, ";charset=");
+                    strcat(sent, "\nConnection: close\n");
+                    strcat(sent, "Content-Type: application/json;charset=");
                     strcat(sent, pConfig->config("CHARSET"));
                     strcat(sent, "\n\n");
-                    printf("%s", sent);
+                    Logger::getInstance()->info("Deliver header:\n%s", sent);
                     pfile->write(sent);
 
                     //create response payload
                     strcpy(sent, result.getPayload());
                     //Note.- The header and the payload are sent separately
-                    Logger::getInstance()->info("Deliver payload: %s", sent);
-
+                    Logger::getInstance()->info("Deliver payload:\n%s", sent);
                     pfile->write(sent);
 
                     //close the new_fd Copy
