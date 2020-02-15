@@ -17,12 +17,11 @@ int main(int argc, char const *argv[]) {
 
 	Logger::getInstance()->info("Server starting...");
 
-	Network::Configuration config;
 	FilesHandler filesHandler;
     Controller::ControllerHandler controller;
-	Network::HttpRequestHandler http(&config, &filesHandler, &controller);
+	Network::HttpRequestHandler http(&filesHandler, &controller);
 
-	if (!config.read()) {
+	if (!Network::Configuration::get()->read()) {
 		Logger::getInstance()->error("Something is wrong with configuration's options.");
 		exit(0);
 	}

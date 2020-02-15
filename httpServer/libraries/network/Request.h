@@ -12,7 +12,6 @@
 
 #include "../file.h"
 #include "../Logger.h"
-#include "Configuration.h"
 #include "../Util.h"
 #include "../controller/ControllerHandler.h"
 
@@ -36,7 +35,6 @@ namespace Network {
 
         char VERB[8];
         File* pfile;
-        Configuration* pConfig;
         Controller::ControllerHandler* pController;
 
         Template::Map<Structure::String, Structure::String> headers;
@@ -47,7 +45,7 @@ namespace Network {
         const char* responseCode(unsigned int code);
 
     public:
-        Request(File* file, Configuration* config, Controller::ControllerHandler* controller);
+        Request(File* file, Controller::ControllerHandler* controller);
         virtual ~Request();
 
         virtual void prepare(char* lines) = 0;

@@ -9,18 +9,13 @@
 
 namespace Network {
 
+Configuration* Configuration::m_config = NULL;
+
 Configuration::Configuration() {
 	filename = new Filename("httpd.conf");
 	directory = new Directory("./config/");
 	assembler = new FileAssembler(directory, filename);
 	m_configFile = new File(assembler);
-}
-
-Configuration::Configuration(File* configFile) {
-	filename = NULL;
-	directory = NULL;
-	assembler = NULL;
-	m_configFile = configFile;
 }
 
 Configuration::~Configuration() {
@@ -41,6 +36,14 @@ Configuration::~Configuration() {
 		delete m_configFile;
 	}
 
+}
+
+Configuration* Configuration::get() {
+    if (!m_config) {
+        m_config = new Configuration();
+    }
+
+    return m_config;
 }
 
 bool Configuration::read() {
@@ -76,7 +79,6 @@ bool Configuration::read() {
         configMap[key] = pch;
     }
 
-    //configMap[index] = NULL;
     m_configFile->close();
     delete [] ptrFile;
 

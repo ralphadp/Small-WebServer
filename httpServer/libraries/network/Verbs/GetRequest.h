@@ -35,7 +35,7 @@ namespace Network {
 
             Template::Map<Structure::String, Structure::String> m_query;
         public:
-            GetRequest(File *file, Configuration *config, Controller::ControllerHandler *controller);
+            GetRequest(File *file, Controller::ControllerHandler *controller);
 
             virtual ~GetRequest();
 

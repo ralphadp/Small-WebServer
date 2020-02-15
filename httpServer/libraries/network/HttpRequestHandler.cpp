@@ -10,12 +10,10 @@
 namespace Network {
 
 HttpRequestHandler::HttpRequestHandler(
-        Configuration* config,
         FilesHandler* fileHandler,
         Controller::ControllerHandler* controller
     ) {
 
-	this->config = config;
 	this->fileHandler = fileHandler;
 	this->controller = controller;
 	pfile = new File(NULL);
@@ -49,7 +47,7 @@ void HttpRequestHandler::create() {
 	}
 
 	m_address.sin_family      = AF_INET;
-	m_address.sin_port        = htons(config->getPort());
+	m_address.sin_port        = htons(Network::Configuration::get()->getPort());
 	m_address.sin_addr.s_addr = INADDR_ANY;
 
 	memset(&(m_address.sin_zero), '\0', 8);
@@ -74,7 +72,7 @@ void HttpRequestHandler::bind() {
 		exit(1);
 	}
 
-	config->dropPrivileges();
+    Network::Configuration::get()->dropPrivileges();
 
 	if (::listen(sockfd, BACKLOG) == -1) {
 		Logger::getInstance()->error("Cannot Listen.");
@@ -126,9 +124,9 @@ Network::Request* HttpRequestHandler::buildRequest(char* message) {
     char* requestType = strtok(messageCopy, " ");
 
 	if (isGet(requestType)) {
-		return new Network::Verbs::GetRequest(pfile, config, controller);
+		return new Network::Verbs::GetRequest(pfile, controller);
 	} else if (isPost(requestType)) {
-		return new Network::Verbs::PostRequest(pfile, config, controller);
+		return new Network::Verbs::PostRequest(pfile, controller);
 	} else if (isPut(requestType)) {
 		//return new network::PutRequest(pfile);//TODO: need to implement
 	} else if (isDelete(requestType)) {
@@ -168,7 +166,7 @@ bool HttpRequestHandler::readRemoteMessage() {
 }
 
 void HttpRequestHandler::listen() {
-	Logger::getInstance()->info("Starting to listen in Port: %d", config->getPort());
+	Logger::getInstance()->info("Starting to listen in Port: %d", Network::Configuration::get()->getPort());
 
 	while(true) {
 		sin_size = sizeof(struct sockaddr_in);

@@ -11,13 +11,11 @@ namespace Network {
 
     Request::Request(
             File* file,
-            Configuration* config,
             Controller::ControllerHandler* controller
     ) {
         lines = NULL;
         postLine = NULL;
         pfile = file;
-        pConfig = config;
         pController = controller;
         headerList = "Host:User-Agent:Accept:Accept-Language:Accept-Encoding:content-type:origin:Content-Length:Connection:Renge:";
 

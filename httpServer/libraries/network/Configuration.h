@@ -37,8 +37,10 @@ class Configuration {
 
 public:
 	Configuration();
-	explicit Configuration(File* configFile);
 	virtual ~Configuration();
+
+    static Configuration* m_config;
+    static Configuration* get();
 	bool read();
 	void dropPrivileges();
 	int getPort();

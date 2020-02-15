@@ -52,14 +52,13 @@ class HttpRequestHandler {
 	char* m_message;
 	size_t MESSAGE_LENGTH = 3000;
 
-	Configuration* config;
 	FilesHandler* fileHandler;
     Controller::ControllerHandler* controller;
 	File* pfile;
 	Network::Request* request;
 
 public:
-	HttpRequestHandler(Configuration* config, FilesHandler* fileHandler, Controller::ControllerHandler* controller);
+	HttpRequestHandler(FilesHandler* fileHandler, Controller::ControllerHandler* controller);
 	virtual ~HttpRequestHandler();
 	void create();
 	void bind();

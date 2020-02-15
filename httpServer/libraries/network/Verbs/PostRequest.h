@@ -19,7 +19,7 @@ namespace Network {
         class PostRequest : public Request {
 
         public:
-            PostRequest(File *file, Configuration *config, Controller::ControllerHandler *controller);
+            PostRequest(File *file, Controller::ControllerHandler *controller);
 
             virtual ~PostRequest();
 

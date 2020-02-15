@@ -13,9 +13,8 @@ namespace Network {
 
         PostRequest::PostRequest(
                 File *file,
-                Configuration *config,
                 Controller::ControllerHandler *controller
-        ) : Request(file, config, controller) {
+        ) : Request(file, controller) {
             strcpy(VERB, "POST");
         }
 
@@ -124,7 +123,7 @@ namespace Network {
             strcat(sent, length);
             strcat(sent, "\nConnection: close\n");
             strcat(sent, "Content-Type: application/json;charset=");
-            strcat(sent, pConfig->config("CHARSET"));
+            strcat(sent, Network::Configuration::get()->config("CHARSET"));
             strcat(sent, "\n\n");
             Logger::getInstance()->info("Deliver header:\n%s", sent);
             pfile->write(sent);

@@ -13,9 +13,8 @@ namespace Network {
 
         GetRequest::GetRequest(
                 File *file,
-                Configuration *config,
                 Controller::ControllerHandler *controller
-        ) : Request(file, config, controller) {
+        ) : Request(file, controller) {
             resultPath = NULL;
 
             hostnamef = NULL;
@@ -165,7 +164,7 @@ namespace Network {
                     strcat(sent, length);
                     strcat(sent, "\nConnection: close\n");
                     strcat(sent, "Content-Type: application/json;charset=");
-                    strcat(sent, pConfig->config("CHARSET"));
+                    strcat(sent, Network::Configuration::get()->config("CHARSET"));
                     strcat(sent, "\n\n");
                     Logger::getInstance()->info("Deliver header:\n%s", sent);
                     pfile->write(sent);
@@ -251,7 +250,7 @@ namespace Network {
             strcat(sent, "\nConnection: close\nContent-Type: ");
             strcat(sent, mime);
             strcat(sent, "; charset=");
-            strcat(sent, pConfig->config("CHARSET"));
+            strcat(sent, Network::Configuration::get()->config("CHARSET"));
             strcat(sent, "\n\n");
 
             Logger::getInstance()->info("RESPONSE:\n%s", sent);
