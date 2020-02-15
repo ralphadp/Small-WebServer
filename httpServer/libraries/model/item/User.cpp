@@ -31,13 +31,13 @@ namespace Model {
                     sprintf(payload, templateContent, token, success);
                     payload[payloadLength] = 0;
 
-                    Result result(payload, true);
+                    Result result(payload);
                     delete [] payload;
 
                     return result;
             }
 
-            return Result(defaultBadCredentialsTemplate, false);
+            return Result(defaultBadCredentialsTemplate, false, 401);
         }
     }
 }

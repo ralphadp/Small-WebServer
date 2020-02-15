@@ -16,7 +16,7 @@ namespace Model {
             //TODO: call Db, fake response meanwhile
             sprintf(payload, templateContent, 411, 341, 2, "2020-04-01T03:30:00PM");
 
-            Result result(payload, true);
+            Result result(payload);
             delete [] payload;
 
             return result;
@@ -32,7 +32,7 @@ namespace Model {
                 "03:30:00PM", "04:15:00PM", 12, "Maria Zelalla",
                 "7342311", "America 5142", "456342", 1, "Bring the laboratory analisys");
 
-            Result result(payload, true);
+            Result result(payload);
             delete [] payload;
 
             return result;

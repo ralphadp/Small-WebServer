@@ -11,7 +11,7 @@ namespace Model {
         Result Server::notFound(Network::RequestBag& params, const char* templateContent) {
             Logger::getInstance()->info("::%s request rest params: %d", __func__, params.getRestParameters().length());
 
-            return Result(templateContent, false);
+            return Result(templateContent, false, 404);
         }
     }
 }

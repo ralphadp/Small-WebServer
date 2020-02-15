@@ -41,7 +41,7 @@ namespace Model {
 
         if (!templateContent) {
 
-            return Result(Model::getErrorTemplate(), false);
+            return Result(Model::getErrorTemplate(), false, 500);
         }
 
         if (Model::verifyToken(parameters.getContents())) {
@@ -49,6 +49,6 @@ namespace Model {
             return this->m_pAction(parameters, templateContent);
         }
 
-        return Result(Model::getInvalidTokenTemplate(), false);
+        return Result(Model::getInvalidTokenTemplate(), false, 401);
     }
 }

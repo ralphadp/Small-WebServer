@@ -88,4 +88,23 @@ namespace Network {
         return false;
     }
 
+    const char* Request::responseCode(unsigned int code) {
+        switch (code) {
+            case 200:
+                return "200 OK";
+            case 404:
+                return "404 Not Found";
+            case 206:
+                return "206 Partial Content";
+            case 301:
+                return "301 Moved Permanently";
+            case 401:
+                return "401 Unauthorized";
+            case 403:
+                return "403 Forbidden";
+            default:
+                return "500 Internal Server Error";
+        }
+    }
+
 } /* namespace network */

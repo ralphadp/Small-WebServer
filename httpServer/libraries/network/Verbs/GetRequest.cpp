@@ -24,7 +24,7 @@ namespace Network {
 
             rangetmp = NULL;
             range = 0;
-            strcpy(code, "");
+            code = 0;
             strcpy(VERB, "GET");
         }
 
@@ -77,7 +77,7 @@ namespace Network {
             FileAssembler assembler(&dir, &fileNotFound);
             pfile->setFileAssembler(&assembler);
             pfile->open(FileAction::Type::READ);
-            strcpy(code, "404 Not Found");
+            code = 404;
         }
 
         void GetRequest::prepare(char *message) {
@@ -114,8 +114,7 @@ namespace Network {
 
             if (headers.exist("Range:")) {
                 rangetmp= const_cast<char*>(headers["Range:"].value());
-                strcpy(code, "206 Partial Content");
-
+                code = 206;
                 rangetmp = strtok(strpbrk(rangetmp, "="), "=-");
                 range = atoi(rangetmp);
             }
@@ -131,19 +130,19 @@ namespace Network {
                     pfile->setFileAssembler(&assembler);
 
                     if (pfile->open(FileAction::Type::READ)) {
-                        strcpy(code, "200 OK");
+                        code = 200;
                     } else {
                         //Here should be some kind of directory listing
                         setNotFound();
                     }
                 } else {
-                    strcpy(code, "301 Moved Permanently");
+                    code = 301;
                     sprintf(moved, "Location: http://%s%s/", hostnamef, resultPath);
                 }
             } else {
                 //get file descriptor for founded file
                 if (pfile->open(resultPath, FileAction::Type::READ)) {
-                    strcpy(code, "200 OK");
+                    code = 200;
                 } else {
                     setNotFound();
                 }
@@ -152,15 +151,16 @@ namespace Network {
 
         void GetRequest::process() {
 
-            if (strcmp(code, "404 Not Found") == 0) {
+            if (code == 404) {
                 Model::Result result = pController->deliverProcessing(m_bag);
 
                 if (result.isSuccess()) {
                     sprintf(length, "%ld", (long) result.getLength());
 
                     //create response header
-                    strcpy(sent, "HTTP/1.1 200 OK\n");
-                    strcat(sent, "Server: httpd 0.3.1\n");
+                    strcpy(sent, "HTTP/1.1 ");
+                    strcat(sent, responseCode(result.getCode()));
+                    strcat(sent, "\nServer: httpd 0.3.1\n");
                     strcat(sent, "Content-Length: ");
                     strcat(sent, length);
                     strcat(sent, "\nConnection: close\n");
@@ -183,18 +183,18 @@ namespace Network {
                 }
             }
 
-            if (!strlen(code)) {
+            if (!code) {
                 Logger::getInstance()->warning("No code to check.");
 
                 return;
             }
 
-            if (strcmp(code, "301 Moved Permanently") != 0) {
+            if (code != 301) {
                 //prepare buffer for the file requested
                 pfile->prepareChunkReading(range);
             }
 
-            if (strcmp(code, "404 Not Found") != 0 && strcmp(code, "301 Moved Permanently") != 0) {
+            if (code != 404 && code != 301) {
                 ext = strtok(file, ".");
                 while (ext != NULL) {
                     ext = strtok(NULL, ".");
@@ -224,22 +224,22 @@ namespace Network {
 
             //create response header
             strcpy(sent, "HTTP/1.1 ");
-            strcat(sent, code);
+            strcat(sent, responseCode(code));
             strcat(sent, "\nServer: httpd 0.1.1\n");
 
-            if (strcmp(code, "301 Moved Permanently") == 0) {
+            if (code == 301) {
                 strcat(sent, moved);
                 strcat(sent, "\n");
             }
 
             strcat(sent, "Content-Length: ");
-            if (strcmp(code, "301 Moved Permanently") != 0) {
+            if (code != 301) {
                 strcat(sent, pfile->GetContentLength());
             } else {
                 strcat(sent, "0");
             }
 
-            if (strcmp(code, "206 Partial Content") == 0) {
+            if (code == 206) {
                 strcat(sent, "\nContent-Range: bytes ");
                 strcat(sent, pfile->getStart());
                 strcat(sent, "-");

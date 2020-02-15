@@ -44,6 +44,7 @@ namespace Network {
 
         bool parsePath(const char *line);
         bool parseHeader(const char *line);
+        const char* responseCode(unsigned int code);
 
     public:
         Request(File* file, Configuration* config, Controller::ControllerHandler* controller);

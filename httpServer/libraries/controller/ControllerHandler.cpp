@@ -44,12 +44,12 @@ namespace Controller {
         if (!requestBag.getUrlPath()) {
             Logger::getInstance()->error("The path is empty, cannot be processed in the Model");
 
-            return Model::Result("{\"success\":\"false\",\"message\":\"Server error 102\"}", false);
+            return Model::Result("{\"success\":\"false\",\"message\":\"Server error 102\"}", false, 500);
         }
 
         Model::ModelHandler* model = fetchModel(requestBag);
         if (!model) {
-            return Model::Result("{\"success\":\"false\",\"message\":\"Server error 103\"}", false);
+            return Model::Result("{\"success\":\"false\",\"message\":\"Server error 103\"}", false, 500);
         }
 
         return model->process(requestBag);

@@ -20,7 +20,7 @@ namespace Network {
     namespace Verbs {
 
         class GetRequest : public Request {
-            char code[50];
+            unsigned int code;
             char file[200];
             char moved[256];
             char mime[128];

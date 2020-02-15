@@ -109,7 +109,7 @@ namespace Network {
 
             if (!m_bag.getContents()) {
                 Logger::getInstance()->error("The content is empty, cannot be processed in the Model");
-                result = Model::Result("{\"success\":false,\"message\":\"Server error 101\"}", false);
+                result = Model::Result("{\"success\":false,\"message\":\"Server error 101\"}", false, 500);
             } else {
                 result = pController->deliverProcessing(m_bag);
             }
@@ -117,8 +117,9 @@ namespace Network {
             sprintf(length, "%ld", (long) result.getLength());
 
             //create response header
-            strcpy(sent, "HTTP/1.1 200 OK\n");
-            strcat(sent, "Server: httpd 0.3.1\n");
+            strcpy(sent, "HTTP/1.1 ");
+            strcat(sent, responseCode(result.getCode()));
+            strcat(sent, "\nServer: httpd 0.3.1\n");
             strcat(sent, "Content-Length: ");
             strcat(sent, length);
             strcat(sent, "\nConnection: close\n");
