@@ -23,7 +23,7 @@ namespace Structure {
 
     void String::assign(const char *value) {
         if (value) {
-            m_value = new char[strlen(value) + 1];
+            m_value = new char[strlen(value) + 1]();
             strcpy(m_value, value);
             m_value[strlen(value)] = 0;
         }

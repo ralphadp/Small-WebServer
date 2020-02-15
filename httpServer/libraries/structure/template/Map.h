@@ -83,7 +83,7 @@ namespace Template {
             m_value(0),
             m_capacity(100),
             m_length(0) {
-        m_value = new Chain *[m_capacity];
+        m_value = new Chain *[m_capacity]();
         for (int index = 0; index < m_capacity; index++) {
             m_value[index] = 0;
         }
@@ -93,6 +93,7 @@ namespace Template {
     Map<K, V>::~Map() {
         clear();
         delete [] m_value;
+        m_value = 0;
     }
 
     template<class K, class V>
@@ -114,7 +115,6 @@ namespace Template {
         int index = hash(key);
 
         if (!m_value[index]) {
-
             Pair pair(key);
             m_value[index] = new Chain(pair);
 
@@ -136,12 +136,18 @@ namespace Template {
 
     template<class K, class V>
     void Map<K, V>::clear() {
+        if (!m_length || !m_value) {
+            return;
+        }
+
         for (int index = 0; index < m_capacity; index++) {
             if (m_value[index]) {
                 delete m_value[index];
                 m_value[index] = 0;
             }
         }
+
+        m_length = 0;
     }
 
     template<class K, class V>

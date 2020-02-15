@@ -13,6 +13,7 @@
 #include "../../controller/ControllerHandler.h"
 #include "../../structure/String.h"
 #include "../../structure/template/Map.h"
+#include "../../Util.h"
 
 namespace Network {
 

@@ -6,7 +6,6 @@
 #define SERVER_REQUESTBAG_H
 
 #include <string.h>
-
 #include "../structure/String.h"
 #include "../structure/template/Map.h"
 
@@ -18,8 +17,9 @@ namespace Network {
         char m_version[16];
         char *m_message;
         unsigned int contentMessageLength;
-        Template::Map<Structure::String, Structure::String> m_restParameters;
-        Template::Map<Structure::String, Structure::String> m_queryParameters;
+        Template::Map<Structure::String, Structure::String> m_null;
+        Template::Map<Structure::String, Structure::String>* m_restParameters;
+        Template::Map<Structure::String, Structure::String>* m_queryParameters;
     public:
 
         RequestBag();
@@ -36,10 +36,10 @@ namespace Network {
         const char* getUrlPath() const;
         const char* getVersion() const;
         Template::Map<Structure::String, Structure::String>& getRestParameters();
-        void copyRestParams(const Template::Map<Structure::String, Structure::String>& restParameters);
+        void copyRestParams( Template::Map<Structure::String, Structure::String>& restParameters);
         /*TODO: Query parameters should be defined and implemented in a inherited class*/
         Template::Map<Structure::String, Structure::String>& getQueryParameters();
-        void copyQueryParams(const Template::Map<Structure::String, Structure::String>& restParameters);
+        void copyQueryParams( Template::Map<Structure::String, Structure::String>& restParameters);
 
         bool hasQuery();
         char* removeQueryFromUrl();

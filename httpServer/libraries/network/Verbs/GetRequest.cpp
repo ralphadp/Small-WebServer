@@ -29,7 +29,6 @@ namespace Network {
         }
 
         GetRequest::~GetRequest() {
-
         }
 
         bool GetRequest::parseQuery(const char* path) {
@@ -41,14 +40,12 @@ namespace Network {
 
             query++;
 
-            char QUERY[1024];
-            strcpy(QUERY, query);
+            char* QUERY = Util::clone(query);
 
             char* pParameter = strtok(QUERY, "&");
             while(pParameter) {
 
-                char PARAM[512];
-                strcpy(PARAM, pParameter);
+                char* PARAM = Util::clone(pParameter);
                 char* token = strtok(PARAM, "=");
 
                 while(token) {
@@ -61,8 +58,13 @@ namespace Network {
                     token = strtok(NULL, "=");
                 }
 
+                delete [] PARAM;
+
                 pParameter = strtok(pParameter + strlen(pParameter) + 1, "&");
+
             }
+
+            delete [] QUERY;
 
             return true;
         }

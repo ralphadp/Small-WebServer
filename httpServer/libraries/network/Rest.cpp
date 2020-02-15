@@ -9,7 +9,7 @@ namespace Network {
     const char* Rest::parseParams(const char* verb) {
 
         const char* restUrl = 0;
-        Template::List<Structure::Url>& urlList = m_urls[verb];
+        const Template::List<Structure::Url>& urlList = m_urls[verb];
         bool onTrack = false;
 
         unsigned int sizeList = urlList.getLength();
@@ -27,14 +27,16 @@ namespace Network {
 
             unsigned int size = input.getLength();
             for (unsigned int part = 0; part < size; part++) {
+                const char* inputUrlPart = input[part];
+                const char* controllerUrlPart = list[part];
 
-                if (strcmp(input[part], list[part]) == 0) {
+                if (strcmp(inputUrlPart, controllerUrlPart) == 0) {
                     onTrack = true;
                 } else {
-                    if (list[part][0] == ':') {
+                    if (controllerUrlPart[0] == ':') {
                         onTrack = true;
-                        restUrl = urlList[index].value();
-                        m_parameters[list[part]] = input[part];
+                        restUrl = urlItem.value();
+                        m_parameters[controllerUrlPart] = inputUrlPart;
                     } else {
                         onTrack = false;
                     }

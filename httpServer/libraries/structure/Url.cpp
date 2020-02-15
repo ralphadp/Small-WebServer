@@ -16,7 +16,6 @@ namespace Structure {
     }
 
     Url::~Url() {
-        m_parts.clear();
     }
 
     void Url::split() {

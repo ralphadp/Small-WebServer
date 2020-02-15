@@ -6,7 +6,7 @@
 
 namespace Network {
 
-    RequestBag::RequestBag() {
+    RequestBag::RequestBag() : m_restParameters(NULL), m_queryParameters(NULL) {
         m_message = NULL;
         contentMessageLength = 0;
     }
@@ -68,20 +68,26 @@ namespace Network {
         return m_version;
     }
 
-    void RequestBag::copyRestParams(const Template::Map<Structure::String, Structure::String>& restParameters) {
-        m_restParameters = restParameters;
+    void RequestBag::copyRestParams(Template::Map<Structure::String, Structure::String>& restParameters) {
+        m_restParameters = &restParameters;
     }
 
     Template::Map<Structure::String, Structure::String>& RequestBag::getRestParameters() {
-        return m_restParameters;
+        if(!m_restParameters) {
+            return m_null;
+        }
+        return *m_restParameters;
     }
 
-    void RequestBag::copyQueryParams(const Template::Map<Structure::String, Structure::String>& restParameters) {
-        m_queryParameters = restParameters;
+    void RequestBag::copyQueryParams(Template::Map<Structure::String, Structure::String>& restParameters) {
+        m_queryParameters = &restParameters;
     }
 
     Template::Map<Structure::String, Structure::String>& RequestBag::getQueryParameters() {
-        return m_queryParameters;
+        if(!m_queryParameters) {
+            return m_null;
+        }
+        return *m_queryParameters;
     }
 
     /**
