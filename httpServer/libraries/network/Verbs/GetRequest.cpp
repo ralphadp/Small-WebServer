@@ -18,8 +18,6 @@ namespace Network {
             resultPath = NULL;
 
             hostnamef = NULL;
-            ext = NULL;
-            extf = NULL;
 
             rangetmp = NULL;
             range = 0;
@@ -194,30 +192,8 @@ namespace Network {
             }
 
             if (code != 404 && code != 301) {
-                ext = strtok(file, ".");
-                while (ext != NULL) {
-                    ext = strtok(NULL, ".");
-                    if (ext != NULL) {
-                        extf = ext;
-                    }
-                }
-
-                /* TODO: Mapping is needed here*/
-                if (strcmp(extf, "html") == 0) {
-                    strcpy(mime, "text/html");
-                } else if (strcmp(extf, "jpg") == 0) {
-                    strcpy(mime, "image/jpeg");
-                } else if (strcmp(extf, "gif") == 0) {
-                    strcpy(mime, "image/gif");
-                } else if (strcmp(extf, "png") == 0) {
-                    strcpy(mime, "image/png");
-                } else if (strcmp(extf, "css") == 0) {
-                    strcpy(mime, "text/css");
-                } else {
-                    strcpy(mime, "application/octet-stream");
-                }
+                strcpy(mime, getMime(file));
             } else {
-                //default mime
                 strcpy(mime, "text/html");
             }
 

@@ -105,4 +105,29 @@ namespace Network {
         }
     }
 
+    const char* Request::getMime(const char* file) {
+
+        char* ext = strchr(const_cast<char*>(file), '.');
+
+        if (!ext) {
+            return "text/html";
+        }
+
+        ext++;
+
+        if (strcmp(ext, "html") == 0) {
+            return "text/html";
+        } else if (strcmp(ext, "jpg") == 0) {
+            return "image/jpeg";
+        } else if (strcmp(ext, "gif") == 0) {
+            return "image/gif";
+        } else if (strcmp(ext, "png") == 0) {
+            return "image/png";
+        } else if (strcmp(ext, "css") == 0) {
+            return "text/css";
+        }
+
+        return "application/octet-stream";
+    }
+
 } /* namespace network */

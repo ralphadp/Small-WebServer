@@ -43,6 +43,7 @@ namespace Network {
         bool parsePath(const char *line);
         bool parseHeader(const char *line);
         const char* responseCode(unsigned int code);
+        const char* getMime(const char* file);
 
     public:
         Request(File* file, Controller::ControllerHandler* controller);

@@ -21,15 +21,13 @@ namespace Network {
 
         class GetRequest : public Request {
             unsigned int code;
-            char file[200];
+            char file[256];
             char moved[256];
-            char mime[128];
+            char mime[64];
 
             char *resultPath;
 
             char *hostnamef;
-            char *ext;
-            char *extf;
             char *rangetmp;
             long range;
 
