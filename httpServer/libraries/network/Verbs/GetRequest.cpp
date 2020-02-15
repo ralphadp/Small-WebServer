@@ -37,31 +37,17 @@ namespace Network {
 
             query++;
 
-            char* QUERY = Util::clone(query);
+            char* QUERY = strdup(query);
+            char* index = QUERY;
+            char* ptr = strsep (&index, "&");
 
-            char* pParameter = strtok(QUERY, "&");
-            while(pParameter) {
-
-                char* PARAM = Util::clone(pParameter);
-                char* token = strtok(PARAM, "=");
-
-                while(token) {
-
-                    Structure::String key(token);
-                    token = strtok(NULL, "=");
-                    if (token) {
-                        m_query[key] = token;
-                    }
-                    token = strtok(NULL, "=");
-                }
-
-                delete [] PARAM;
-
-                pParameter = strtok(pParameter + strlen(pParameter) + 1, "&");
-
+            while (ptr) {
+                Structure::String key(strtok(ptr, "="));
+                m_query[key] = strtok (NULL, "=");
+                ptr = strsep (&index, "&");
             }
 
-            delete [] QUERY;
+            free(QUERY);
 
             return true;
         }
