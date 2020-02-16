@@ -11,8 +11,11 @@ namespace Structure {
         split();
     }
 
-    Url::Url(const String& object) : String(object) {
-        split();
+    Url::Url(const Url& object) : String(object.m_value) {
+        unsigned int index = 0;
+        while(index < object.m_parts.getLength()) {
+            m_parts.add(object.m_parts[index++]);
+        }
     }
 
     Url::~Url() {
@@ -28,7 +31,8 @@ namespace Structure {
 
         char* part = strtok(key, "/");
         while (part) {
-            m_parts.add(part);
+            //since it is a const char* list, is going to store a copy of the string
+            m_parts.add(strdup(part));
             part = strtok(NULL, "/");
         }
 
@@ -37,5 +41,15 @@ namespace Structure {
 
     Template::List<const char*>& Url::parts() {
         return m_parts;
+    }
+
+    Url &Url::operator=(const Url &object) {
+        unsigned int index = 0;
+        while(index < object.m_parts.getLength()) {
+            m_parts.add(object.m_parts[index++]);
+        }
+        assign(object.value());
+
+        return *this;
     }
 }

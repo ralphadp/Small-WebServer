@@ -15,6 +15,7 @@
 namespace Network {
 
     class Rest {
+        Structure::String m_selectedPath;
         Structure::Url m_currentUrl;
         Template::Map<Structure::String, Structure::String> m_parameters;
         Template::Map<Structure::String, Template::List<Structure::Url>> m_urls;
@@ -26,7 +27,7 @@ namespace Network {
         void addGetUrl(const char* path);
         void addPostUrl(const char* path);
 
-        const char* parseParams(const char* verb);
+        bool parseParams(const char* verb);
     };
 }
 

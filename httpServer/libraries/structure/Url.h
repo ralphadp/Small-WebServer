@@ -16,10 +16,11 @@ namespace Structure {
     public:
         Url();
         Url(const char*);
-        Url(const String&);
+        Url(const Url&);
         ~Url();
         void split();
         Template::List<const char*>& parts();
+        Url& operator=(const Url &object);
 
     };
 }

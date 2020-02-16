@@ -6,18 +6,19 @@
 
 namespace Network {
 
-    const char* Rest::parseParams(const char* verb) {
+    bool Rest::parseParams(const char* verb) {
 
-        const char* restUrl = 0;
         const Template::List<Structure::Url>& urlList = m_urls[verb];
+        const Template::List<const char*>& input = m_currentUrl.parts();
         bool onTrack = false;
 
         unsigned int sizeList = urlList.getLength();
-        for (unsigned int index = 0; index < sizeList; index++) {
+        unsigned int index;
+        for (index = 0; index < sizeList; index++) {
 
             Structure::Url urlItem = urlList[index];
             const Template::List<const char*>& list = urlItem.parts();
-            const Template::List<const char*>& input = m_currentUrl.parts();
+
 
             if (input.getLength() != list.getLength()) {
                 continue;
@@ -35,7 +36,6 @@ namespace Network {
                 } else {
                     if (controllerUrlPart[0] == ':') {
                         onTrack = true;
-                        restUrl = urlItem.value();
                         m_parameters[controllerUrlPart] = inputUrlPart;
                     } else {
                         onTrack = false;
@@ -52,17 +52,19 @@ namespace Network {
             m_parameters.clear();
         }
 
-        return restUrl;
+        m_selectedPath = m_urls[verb][index].value();
+
+        return onTrack;
     }
 
     const char* Rest::process(RequestBag& parameters) {
         m_currentUrl = parameters.getUrlPath();
-        const char* restUrl = parseParams(parameters.getVerb());
-        if (restUrl) {
+        bool success = parseParams(parameters.getVerb());
+        if (success) {
             parameters.copyRestParams(m_parameters);
         }
 
-        return restUrl;
+        return m_selectedPath.value();
     }
 
     Template::Map<Structure::String, Structure::String>& Rest::getParameters() {
