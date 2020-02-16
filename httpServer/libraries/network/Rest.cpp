@@ -19,7 +19,6 @@ namespace Network {
             Structure::Url urlItem = urlList[index];
             const Template::List<const char*>& list = urlItem.parts();
 
-
             if (input.getLength() != list.getLength()) {
                 continue;
             }
@@ -39,6 +38,7 @@ namespace Network {
                         m_parameters[controllerUrlPart] = inputUrlPart;
                     } else {
                         onTrack = false;
+                        break;
                     }
                 }
             }
@@ -50,9 +50,9 @@ namespace Network {
 
         if (!onTrack) {
             m_parameters.clear();
+        } else {
+            m_selectedPath = m_urls[verb][index].value();
         }
-
-        m_selectedPath = m_urls[verb][index].value();
 
         return onTrack;
     }
