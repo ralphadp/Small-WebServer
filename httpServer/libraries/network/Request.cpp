@@ -107,6 +107,10 @@ namespace Network {
 
     const char* Request::getMime(const char* file) {
 
+        if (!file) {
+            return "application/json";
+        }
+
         char* ext = strchr(const_cast<char*>(file), '.');
 
         if (!ext) {

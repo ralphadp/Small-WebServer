@@ -150,13 +150,13 @@ namespace Network {
                     strcat(sent, "Content-Type: application/json;charset=");
                     strcat(sent, Network::Configuration::get()->config("CHARSET"));
                     strcat(sent, "\n\n");
-                    Logger::getInstance()->info("Deliver header:\n%s", sent);
+                    Logger::getInstance()->info("Response header:\n%s", sent);
                     pfile->write(sent);
 
                     //create response payload
                     strcpy(sent, result.getPayload());
                     //Note.- The header and the payload are sent separately
-                    Logger::getInstance()->info("Deliver payload:\n%s", sent);
+                    Logger::getInstance()->info("Response payload:\n%s", sent);
                     pfile->write(sent);
 
                     //close the new_fd Copy
@@ -194,11 +194,7 @@ namespace Network {
             }
 
             strcat(sent, "Content-Length: ");
-            if (code != 301) {
-                strcat(sent, pfile->GetContentLength());
-            } else {
-                strcat(sent, "0");
-            }
+            strcat(sent, pfile->GetContentLength());
 
             if (code == 206) {
                 strcat(sent, "\nContent-Range: bytes ");
@@ -215,7 +211,7 @@ namespace Network {
             strcat(sent, Network::Configuration::get()->config("CHARSET"));
             strcat(sent, "\n\n");
 
-            Logger::getInstance()->info("RESPONSE:\n%s", sent);
+            Logger::getInstance()->info("Response header:\n%s", sent);
 
             pfile->write(sent);
 

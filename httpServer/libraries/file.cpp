@@ -18,6 +18,7 @@ File::File(FileAssembler* assembler) {
 	buffer = NULL;
 
 	readBytesCount = 0;
+	strcpy(contentLength,"0");
 }
 
 File::~File() {
