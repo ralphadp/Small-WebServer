@@ -21,14 +21,6 @@ namespace Structure {
         clear();
     }
 
-    void String::assign(const char *value) {
-        if (value) {
-            m_value = new char[strlen(value) + 1]();
-            strcpy(m_value, value);
-            m_value[strlen(value)] = 0;
-        }
-    }
-
     std::ostream &operator<<(std::ostream &out, const String &object) {
         out << object.m_value;
         return out;

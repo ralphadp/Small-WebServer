@@ -19,7 +19,13 @@ namespace Structure {
     protected:
         char *m_value;
 
-        inline void assign(const char *);
+        inline void assign(const char* value) {
+            if (value) {
+                m_value = new char[strlen(value) + 1]();
+                strcpy(m_value, value);
+                m_value[strlen(value)] = 0;
+            }
+        }
 
     public:
         String();
