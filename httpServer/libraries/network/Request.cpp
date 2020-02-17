@@ -25,9 +25,6 @@ namespace Network {
     }
 
     Request::~Request() {
-        //close the new_fd Copy
-        pfile->closeFD();
-
         delete [] lines;
         delete [] postLine;
     }

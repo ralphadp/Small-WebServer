@@ -112,11 +112,11 @@ bool HttpRequestHandler::isDelete(const char* type) {
 }
 
 Network::Request* HttpRequestHandler::buildRequest(char* message) {
-    if (!message) {
-        Logger::getInstance()->warning("No message to verify the verb or type");
+	if (!message || strlen(message) == 0) {
+		Logger::getInstance()->warning("Remote Message:'%s'. No message to verify the verb or type", message);
 
-        return NULL;
-    }
+		return NULL;
+	}
 
     char messageCopy[3000];
     strcpy(messageCopy, message);
@@ -182,12 +182,10 @@ void HttpRequestHandler::listen() {
 
 			if (readRemoteMessage()) {
 				request = buildRequest(m_message);
-				if (!request) {
-					exit(0);
+				if (request) {
+					request->prepare(m_message);
+					request->process();
 				}
-
-				request->prepare(m_message);
-				request->process();
 			}
             clean();
 			exit(0);

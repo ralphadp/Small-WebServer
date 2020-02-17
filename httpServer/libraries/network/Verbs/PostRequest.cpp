@@ -125,6 +125,8 @@ namespace Network {
             //Note.- The header and the payload are sent separately
             Logger::getInstance()->info("Response payload:\n%s", sent);
             pfile->write(sent);
+            //close the new_fd Copy
+            pfile->closeFD();
         }
 
     } /* namespace Verbs */
