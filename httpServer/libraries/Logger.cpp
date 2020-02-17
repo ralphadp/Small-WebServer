@@ -11,12 +11,12 @@ Logger* Logger::m_logger = NULL;
 
 const char* Logger::RED    = "\x1B[31m";
 const char* Logger::GREEN  = "\x1B[32m";
-const char* Logger::YELLOW = "\x1B[33m";
+const char* Logger::YELLOW = "\x1B[93m";
 
 Logger::ContextFields Logger::context[] = {
 	[Logger::eERROR]   = {.color = Logger::RED, .name = "ERROR"},
 	[Logger::eINFO]    = {.color = Logger::GREEN, .name = "INFO"},
-	[Logger::eWARNING] = {.color = Logger::YELLOW, .name = "WARNING"},
+	[Logger::eWARNING] = {.color = Logger::YELLOW, .name = "WARNING"}
 };
 
 Logger::Logger() {

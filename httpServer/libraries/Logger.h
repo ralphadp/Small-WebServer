@@ -46,8 +46,6 @@ private:
 	void print(Context color, const char* message, __gnuc_va_list arg);
 	void getTimestamp(char* time);
 	void getTimestampExtended(char* currentTimestamp);
-	const char* getContext(const char* color);
-
 
 private:
 	Logger();
