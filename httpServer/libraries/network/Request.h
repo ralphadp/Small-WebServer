@@ -14,7 +14,7 @@
 #include "../Logger.h"
 #include "../Util.h"
 #include "../controller/ControllerHandler.h"
-
+#include "Configuration.h"
 #include "RequestBag.h"
 
 #include "../structure/String.h"
@@ -25,6 +25,11 @@ namespace Network {
     class Request {
 
     protected:
+        const char* charset;
+        unsigned int code;
+        char mime[64];
+        char movedHeaderResponse[256];
+
         RequestBag m_bag;
         char length[100];
         char sent[512]/*TODO: change to dynamically*/;
@@ -44,6 +49,7 @@ namespace Network {
         bool parseHeader(const char *line);
         const char* responseCode(unsigned int code);
         const char* getMime(const char* file);
+        void createResponseHeader(const char* length, const char* file);
 
     public:
         Request(File* file, Controller::ControllerHandler* controller);

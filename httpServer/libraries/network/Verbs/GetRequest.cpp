@@ -21,7 +21,7 @@ namespace Network {
 
             rangetmp = NULL;
             range = 0;
-            code = 0;
+
             strcpy(VERB, "GET");
         }
 
@@ -120,7 +120,8 @@ namespace Network {
                     }
                 } else {
                     code = 301;
-                    sprintf(moved, "Location: http://%s%s/", hostnamef, resultPath);
+                    sprintf(movedHeaderResponse, "\nLocation: http://%s%s/", hostnamef, resultPath);
+                    strcpy(file, "");
                 }
             } else {
                 //get file descriptor for founded file
@@ -139,37 +140,20 @@ namespace Network {
 
                 if (result.isSuccess()) {
                     sprintf(length, "%ld", (long) result.getLength());
+                    code = result.getCode();
 
-                    //create response header
-                    strcpy(sent, "HTTP/1.1 ");
-                    strcat(sent, responseCode(result.getCode()));
-                    strcat(sent, "\nServer: httpd 0.3.1\n");
-                    strcat(sent, "Content-Length: ");
-                    strcat(sent, length);
-                    strcat(sent, "\nConnection: close\n");
-                    strcat(sent, "Content-Type: application/json;charset=");
-                    strcat(sent, Network::Configuration::get()->config("CHARSET"));
-                    strcat(sent, "\n\n");
+                    createResponseHeader(length, "result.json");
                     Logger::getInstance()->info("Response header:\n%s", sent);
                     pfile->write(sent);
 
-                    //create response payload
+                    //deliver response payload
                     strcpy(sent, result.getPayload());
                     //Note.- The header and the payload are sent separately
                     Logger::getInstance()->info("Response payload:\n%s", sent);
                     pfile->write(sent);
 
-                    //close the new_fd Copy
-                    pfile->closeFD();
-
                     return;
                 }
-            }
-
-            if (!code) {
-                Logger::getInstance()->warning("No code to check.");
-
-                return;
             }
 
             if (code != 301) {
@@ -177,48 +161,12 @@ namespace Network {
                 pfile->prepareChunkReading(range);
             }
 
-            if (code != 404 && code != 301) {
-                strcpy(mime, getMime(file));
-            } else {
-                strcpy(mime, "text/html");
-            }
-
-            //create response header
-            strcpy(sent, "HTTP/1.1 ");
-            strcat(sent, responseCode(code));
-            strcat(sent, "\nServer: httpd 0.1.1\n");
-
-            if (code == 301) {
-                strcat(sent, moved);
-                strcat(sent, "\n");
-            }
-
-            strcat(sent, "Content-Length: ");
-            strcat(sent, pfile->GetContentLength());
-
-            if (code == 206) {
-                strcat(sent, "\nContent-Range: bytes ");
-                strcat(sent, pfile->getStart());
-                strcat(sent, "-");
-                strcat(sent, pfile->getEnd());
-                strcat(sent, "/");
-                strcat(sent, pfile->getEnd());
-            }
-
-            strcat(sent, "\nConnection: close\nContent-Type: ");
-            strcat(sent, mime);
-            strcat(sent, "; charset=");
-            strcat(sent, Network::Configuration::get()->config("CHARSET"));
-            strcat(sent, "\n\n");
-
+            createResponseHeader(pfile->GetContentLength(), file);
             Logger::getInstance()->info("Response header:\n%s", sent);
-
             pfile->write(sent);
 
             //send file contents
             pfile->readWriteChunk();
-
-            pfile->closeFD();//close the new_fd Copy
         }
 
     } /* namespace Verbs */

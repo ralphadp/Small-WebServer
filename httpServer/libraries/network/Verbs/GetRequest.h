@@ -9,7 +9,6 @@
 #define SRC_LIBRARIES_NETWORK_GETREQUEST_H_
 
 #include "../Request.h"
-#include "../Configuration.h"
 #include "../../controller/ControllerHandler.h"
 #include "../../structure/String.h"
 #include "../../structure/template/Map.h"
@@ -20,10 +19,7 @@ namespace Network {
     namespace Verbs {
 
         class GetRequest : public Request {
-            unsigned int code;
             char file[256];
-            char moved[256];
-            char mime[64];
 
             char *resultPath;
 

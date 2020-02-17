@@ -18,11 +18,16 @@ namespace Network {
         pfile = file;
         pController = controller;
         headerList = "Host:User-Agent:Accept:Accept-Language:Accept-Encoding:content-type:origin:Content-Length:Connection:Renge:";
-
+        code = 500;
         strcpy(bufferContent, "");
+        charset = Network::Configuration::get()->config("CHARSET");
+        strcpy(movedHeaderResponse, "");
     }
 
     Request::~Request() {
+        //close the new_fd Copy
+        pfile->closeFD();
+
         delete [] lines;
         delete [] postLine;
     }
@@ -107,31 +112,73 @@ namespace Network {
 
     const char* Request::getMime(const char* file) {
 
-        if (!file) {
-            return "application/json";
+        if (!file || strlen(file) == 0) {
+            return "";
         }
 
         char* ext = strchr(const_cast<char*>(file), '.');
 
         if (!ext) {
-            return "text/html";
+            return "text/plain";
         }
 
         ext++;
 
-        if (strcmp(ext, "html") == 0) {
+        if (strcmp(ext, "json") == 0) {
+            return "application/json";
+        } else if (strcmp(ext, "html") == 0) {
             return "text/html";
         } else if (strcmp(ext, "jpg") == 0) {
+            charset = NULL;
             return "image/jpeg";
         } else if (strcmp(ext, "gif") == 0) {
+            charset = NULL;
             return "image/gif";
         } else if (strcmp(ext, "png") == 0) {
+            charset = NULL;
             return "image/png";
         } else if (strcmp(ext, "css") == 0) {
             return "text/css";
         }
 
         return "application/octet-stream";
+    }
+
+    void Request::createResponseHeader(const char* length, const char* file) {
+        //create response header
+        strcpy(sent, "HTTP/1.1 ");
+        strcat(sent, responseCode(code));
+        strcat(sent, "\nServer: httpd ");
+        strcat(sent, Global::VERSION);
+
+        if (code == 301) {
+            strcat(sent, movedHeaderResponse);
+        }
+
+        strcat(sent, "\nContent-Length: ");
+        strcat(sent, length);
+
+        if (code == 206) {
+            strcat(sent, "\nContent-Range: bytes ");
+            strcat(sent, pfile->getStart());
+            strcat(sent, "-");
+            strcat(sent, pfile->getEnd());
+            strcat(sent, "/");
+            strcat(sent, pfile->getEnd());
+        }
+
+        strcat(sent, "\nConnection: close");
+
+        if (code != 301) {
+            strcat(sent, "\nContent-Type: ");
+            strcat(sent, getMime(file));
+            if (charset) {
+                strcat(sent, ";charset=");
+                strcat(sent, charset);
+            }
+        }
+
+        strcat(sent, "\n\n");
     }
 
 } /* namespace network */

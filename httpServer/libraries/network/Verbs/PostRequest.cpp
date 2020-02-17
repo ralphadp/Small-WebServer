@@ -114,28 +114,17 @@ namespace Network {
             }
 
             sprintf(length, "%ld", (long) result.getLength());
+            code = result.getCode();
 
-            //create response header
-            strcpy(sent, "HTTP/1.1 ");
-            strcat(sent, responseCode(result.getCode()));
-            strcat(sent, "\nServer: httpd 0.3.1\n");
-            strcat(sent, "Content-Length: ");
-            strcat(sent, length);
-            strcat(sent, "\nConnection: close\n");
-            strcat(sent, "Content-Type: application/json;charset=");
-            strcat(sent, Network::Configuration::get()->config("CHARSET"));
-            strcat(sent, "\n\n");
-            Logger::getInstance()->info("Deliver header:\n%s", sent);
+            createResponseHeader(length, "result.json");
+            Logger::getInstance()->info("Response header:\n%s", sent);
             pfile->write(sent);
 
-            //create response payload
+            //deliver response payload
             strcpy(sent, result.getPayload());
             //Note.- The header and the payload are sent separately
-            Logger::getInstance()->info("Deliver payload:\n%s", sent);
+            Logger::getInstance()->info("Response payload:\n%s", sent);
             pfile->write(sent);
-
-            //close the new_fd Copy
-            pfile->closeFD();
         }
 
     } /* namespace Verbs */
