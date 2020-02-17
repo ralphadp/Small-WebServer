@@ -84,7 +84,7 @@ namespace Template {
             m_capacity(100),
             m_length(0) {
         m_value = new Chain *[m_capacity]();
-        for (int index = 0; index < m_capacity; index++) {
+        for (unsigned int index = 0; index < m_capacity; index++) {
             m_value[index] = 0;
         }
     }
@@ -140,7 +140,7 @@ namespace Template {
             return;
         }
 
-        for (int index = 0; index < m_capacity; index++) {
+        for (unsigned int index = 0; index < m_capacity; index++) {
             if (m_value[index]) {
                 delete m_value[index];
                 m_value[index] = 0;

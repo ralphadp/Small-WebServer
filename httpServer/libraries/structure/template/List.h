@@ -52,7 +52,7 @@ namespace Template {
 
         if (m_INDEX) {
             T **aux = new T *[m_INDEX + 2];
-            for (int index = 0; index <= m_INDEX - 1; index++) {
+            for (unsigned int index = 0; index <= m_INDEX - 1; index++) {
                 aux[index] = pre[index];
             }
             delete[] pre;
@@ -116,7 +116,7 @@ namespace Template {
 
     template<class T>
     void List<T>::clear() {
-        for (int index = 0; index < m_INDEX; index++) {
+        for (unsigned int index = 0; index < m_INDEX; index++) {
             delete m_ptr[index];
         }
 
