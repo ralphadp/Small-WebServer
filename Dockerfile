@@ -50,6 +50,6 @@ RUN g++ -std=c++11 -Wall -o server main.cpp \
 EXPOSE 12222
 
 # This command runs your application, comment out this line to compile only
-#CMD ["./server"]
+CMD ["./server"]
 
 LABEL Name=c++webserver Version=0.1.1

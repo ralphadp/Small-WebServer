@@ -1,0 +1,155 @@
+<!DOCTYPE HTML>
+
+<html>
+	<head>
+		<title>Small WebServer - API</title>
+		<link rel="icon" type="image/ico" href="favicon.ico">
+		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+		<link rel="stylesheet" type="text/css" href="css/style.css">
+	</head>
+	<body>
+
+		<header id="header">
+			<h1><a href="index.html">Small WebServer</a></h1>
+			<nav id="nav">
+				<ul>
+					<li><a href="index.html">Home</a></li>
+					<li><a href="api.html">API</a></li>
+				</ul>
+			</nav>
+		</header>
+
+		<section id="main" class="wrapper style1">
+			<header class="major">
+				<h2>API</h2>
+				<p>Current list of sample rest api:</p>
+			</header>
+			<div class="container">
+				<section id="content">
+					<section>
+						<h3>POST</h3>
+						<p>/login/</p>
+						<pre>
+							<code>
+{
+	"user":"%s",
+	"password":"%s"
+}
+							</code>
+							<div>Response:</div>
+							<code>
+{
+	"key":"%s",
+	"result":"%s"
+}
+							</code>
+						</pre>
+					</section>
+					<section>
+						<h3>GET</h3>
+						<p>/config/</p>
+						<pre>
+							<code>
+{
+	"user_id":"%s",
+	"token":"%s"
+}
+							</code>
+							<div>Response:</div>
+							<code>
+{
+	"config": {
+		"color": "%s",
+		"background": "%s",
+		"ring": "%d",
+		"notify": "%d"
+	}
+}
+							</code>
+						</pre>
+					</section>
+					<section>
+						<h3>POST</h3>
+						<p>/schedule/</p>
+
+						<pre>
+							<code>
+{
+	"user_id":"%s",
+	"token":"%s"
+}
+							</code>
+							<div>Response:</div>
+							<code>
+{
+	"user_id": "%d",
+	"schedulers": [
+		{
+		"scheduler_id": "%d",
+		"level": "%d",
+		"datetime": "%s"
+		}
+	]
+}
+							</code>
+						</pre>
+					</section>
+					<section>
+						<h3>POST</h3>
+						<p>/schedule/>datetime</p>
+						<pre>
+							<code>
+{
+	"user_id":"%s",
+	"schduler_id":"%s",
+	"token":"%s"
+}
+							</code>
+							<div>Response:</div>
+							<code>
+{
+	"scheduler_id": "%d",
+	"user_id": "%d",
+	"reserved": {
+		"id": "%d",
+		"date": "%s",
+		"start-time": "%s",
+		"end-time": "%s",
+		"assigned": {
+			"id": "%d",
+			"name": "%s",
+			"mobile": "%s"
+		},
+		"address": "%s",
+		"phone": "%s",
+		"level": "%d",
+		"message": "%s"
+	}
+}							</code>
+						</pre>
+					</section>
+				</section>
+			</div>
+		</section>
+		
+		<footer id="footer">
+			<ul class="icons">
+				<li><a href="#" class="icon fa-facebook"><span class="label">Facebook</span></a></li>
+				<li><a href="#" class="icon fa-twitter"><span class="label">Twitter</span></a></li>
+				<li><a href="#" class="icon fa-instagram"><span class="label">Instagram</span></a></li>
+				<li><a href="#" class="icon fa-whatsapp"><span class="label">Dribbble</span></a></li>
+				<li><a href="mailto:small-webserver@datafor.com" class="icon fa-envelope"><span class="label">Envelope</span></a></li>
+			</ul>
+			<ul class="menu">
+				<li><a href="#">FAQ</a></li>
+				<li><a href="#">Terms of Use</a></li>
+				<li><a href="#">Privacy</a></li>
+				<li><a href="#">Contact</a></li>
+			</ul>
+			<span class="copyright">
+				© Copyright. All rights reserved. Design by <a href="#">r.a.l.f.</a>
+			</span>
+		</footer>
+
+	</body>
+</html>
