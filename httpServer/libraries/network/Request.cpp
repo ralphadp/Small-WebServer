@@ -113,13 +113,18 @@ namespace Network {
             return "";
         }
 
-        char* ext = strchr(const_cast<char*>(file), '.');
+        char* ext = NULL;
+        char* extension = strchr(const_cast<char*>(file), '.');
 
-        if (!ext) {
+        if (!extension) {
             return "text/plain";
         }
 
-        ext++;
+        do {
+            ext = ++extension;
+            extension = strchr(extension, '.');
+        } while(extension);
+
 
         if (strcmp(ext, "json") == 0) {
             return "application/json";
